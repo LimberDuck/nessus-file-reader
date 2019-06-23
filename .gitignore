@@ -1,0 +1,8 @@
+*.nessus
+*.xlsx
+*.spec
+.idea/
+__pycache__
+build
+dist
+nessus_file_reader.egg-info
