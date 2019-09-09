@@ -110,7 +110,8 @@ def nfr_example_simple():
                         plugin_id = int(nfr.plugin.report_item_value(report_item, 'pluginID'))
                         risk_factor = nfr.plugin.report_item_value(report_item, 'risk_factor')
                         plugin_name = nfr.plugin.report_item_value(report_item, 'pluginName')
-                        print('\t', plugin_id, '  \t\t\t', risk_factor, '  \t\t\t', plugin_name)
+                        plugin_cves = nfr.plugin.report_item_values(report_item, 'cve')
+                        print('\t', plugin_id, '  \t\t\t', risk_factor, '  \t\t\t', plugin_name, '  \t\t\t', plugin_cves)
 
                     print()
                     # If you want to get output for interesting you plugin

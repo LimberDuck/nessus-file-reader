@@ -5,11 +5,11 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="nessus_file_reader",
-    version="0.1.0",
+    version="0.2.0",
     author="Damian Krawczyk",
     author_email="damian.krawczyk@limberduck.org",
-    description="nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module"
-                "created to quickly parse nessus files containing the results of scans"
+    description="nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module "
+                "created to quickly parse nessus files containing the results of scans "
                 "performed by using Nessus by (C) Tenable, Inc.",
     long_description=long_description,
     long_description_content_type="text/x-rst",

@@ -135,6 +135,20 @@ def report_item_value(report_item, report_item_name):
     return report_item_content_value
 
 
+def report_item_values(report_item, report_item_name):
+    """
+    Function returns list of all values of given report item e.g. list of CVE numbers
+    :param report_item: particular report item for scanned host
+    :param report_item_name: exact report item name for scanned host
+    :return: value of given report item
+    """
+    report_item_values_list = []
+    report_item_content_values = report_item.findall(report_item_name)
+    for report_item_content_value in report_item_content_values:
+        report_item_values_list.append(report_item_content_value.text)
+    return report_item_values_list
+
+
 def compliance_check_item_value(report_item, compliance_check_item_name):
     """
     Function returns value of given compliance check item e.g. cm:compliance-check-name
