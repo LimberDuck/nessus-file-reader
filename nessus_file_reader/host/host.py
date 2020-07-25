@@ -86,6 +86,29 @@ def resolved_fqdn(report_host):
     return host_fqdn
 
 
+def netbios_network_name(root, report_host):
+    """
+    Function returns information about NetBIOS Computer Name, Workgroup / Domain name for given target.
+    :param root: root element of scan file tree
+    :param report_host: report host element
+    :return: os for given target
+    """
+    pido_10150 = plugin.plugin_output(root, report_host, '10150')
+    pido_10150_split = pido_10150.split('\n')
+
+    netbios_computer_name = ''
+    netbios_domain_name = ''
+    for netbios_data_split_entry in pido_10150_split:
+        if 'Computer name' in netbios_data_split_entry:
+            netbios_computer_name = netbios_data_split_entry.split('=')[0].strip().lower()
+
+        if 'Workgroup / Domain name' in netbios_data_split_entry:
+            netbios_domain_name = netbios_data_split_entry.split('=')[0].strip().lower()
+
+    return {'netbios_computer_name': netbios_computer_name,
+            'netbios_domain_name': netbios_domain_name}
+
+
 def detected_os(report_host):
     """
     Function returns information about Operating System for given target.

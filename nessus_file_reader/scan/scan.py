@@ -242,6 +242,10 @@ def list_of_target_hosts(root):
                 address_range = utilities.ip_range_split(target)
                 for address in address_range:
                     target_hosts_final_list.append(str(address))
+            elif re.match('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}', target):
+                address_range = utilities.ip_range_split(target)
+                for address in address_range:
+                    target_hosts_final_list.append(str(address))
             else:
                 target_hosts_final_list.append(target)
     else:
