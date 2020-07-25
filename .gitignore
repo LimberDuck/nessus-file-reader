@@ -6,3 +6,5 @@ __pycache__
 build
 dist
 nessus_file_reader.egg-info
+test_files
+.vscode

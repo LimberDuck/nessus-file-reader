@@ -39,4 +39,12 @@ def ip_range_split(ip_range):
             ip_addresses.append(first_address)
             first_address += 1
 
+    elif re.match('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}', ip_range):
+        ip_network_hosts = ipaddress.ip_network(ip_range).hosts()
+        ip_network_hosts_list = list(ip_network_hosts)
+
+        for ip in ip_network_hosts_list:
+            # print(ip)
+            ip_addresses.append(ip)
+
     return ip_addresses

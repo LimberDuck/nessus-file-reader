@@ -64,7 +64,7 @@ def nessus_scan_file_root_element(file):
     :param file: given nessus file
     :return: root element for this tree.
     """
-    nessus_scan_file = nessus_scan_file_name_with_path(file)
-    nessus_scan_file_parsed = parse(nessus_scan_file)
+
+    nessus_scan_file_parsed = parse(file)
     root = nessus_scan_file_parsed.getroot()
     return root

@@ -5,7 +5,7 @@ with open("README.rst", "r") as fh:
 
 setuptools.setup(
     name="nessus_file_reader",
-    version="0.2.0",
+    version="0.3.0",
     author="Damian Krawczyk",
     author_email="damian.krawczyk@limberduck.org",
     description="nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module "
@@ -16,7 +16,7 @@ setuptools.setup(
     url="https://github.com/LimberDuck/nessus-file-reader",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",

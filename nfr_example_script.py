@@ -124,6 +124,9 @@ def nfr_example_simple():
                     pidos_14272 = nfr.plugin.plugin_outputs(root, report_host, '14272')
                     print(f'All findings for Netstat Portscanner (SSH): \n{pidos_14272}')
 
+                    netbios_network_name = nfr.host.netbios_network_name(root, report_host)
+                    print(f'Netbios network name {netbios_network_name}')
+
             except Exception as e:
                 print(f'\nUps... ERROR occurred. \n\n {str(e)}')
                 traceback.print_exc()
