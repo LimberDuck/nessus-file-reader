@@ -12,7 +12,7 @@ setuptools.setup(
     version=about["__version__"],
     author="Damian Krawczyk",
     author_email="damian.krawczyk@limberduck.org",
-    description="nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module "
+    description="nessus file reader by LimberDuck is a python module "
                 "created to quickly parse nessus files containing the results of scans "
                 "performed by using Nessus by (C) Tenable, Inc.",
     long_description=long_description,
