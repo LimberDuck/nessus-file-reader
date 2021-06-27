@@ -3,9 +3,13 @@ import setuptools
 with open("README.rst", "r") as fh:
     long_description = fh.read()
 
+about = {}
+with open("nessus_file_reader/_version.py") as f:
+    exec(f.read(), about)
+
 setuptools.setup(
     name="nessus_file_reader",
-    version="0.3.0",
+    version=about["__version__"],
     author="Damian Krawczyk",
     author_email="damian.krawczyk@limberduck.org",
     description="nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module "

@@ -26,3 +26,10 @@ jobs:
           pip install -r requirements.txt
       - name: Build package
         run: python setup.py sdist bdist_wheel --universal
+      - name: Install locally
+        run: |
+          ls
+          ls dist
+          TOOL_CURRENT_VERSION=`sed -e 's/.*__version__ = "\(.*\)".*/\1/' nessus_file_reader/_version.py`
+          pip install dist/nessus_file_reader-${TOOL_CURRENT_VERSION}-py2.py3-none-any.whl
+          pip show nessus-file-reader
