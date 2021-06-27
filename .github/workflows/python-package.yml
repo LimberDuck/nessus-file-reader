@@ -39,4 +39,4 @@ jobs:
         shell: bash
       - name: pip show package
         run: |
-          pip show {{ env.python_package_name }}
+          pip show ${{ env.python_package_name }}
