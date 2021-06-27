@@ -30,11 +30,9 @@ jobs:
       - name: Install locally
 
         run: |
-          if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "macOS" ] ; then
-            ls
-            ls dist
-            TOOL_CURRENT_VERSION=`sed -e 's/.*__version__ = "\(.*\)".*/\1/' nessus_file_reader/_version.py`
-            pip install dist/nessus_file_reader-${TOOL_CURRENT_VERSION}-py2.py3-none-any.whl
-            pip show nessus-file-reader
-          fi
+          ls
+          ls dist
+          TOOL_CURRENT_VERSION=`sed -e 's/.*__version__ = "\(.*\)".*/\1/' nessus_file_reader/_version.py`
+          pip install dist/nessus_file_reader-${TOOL_CURRENT_VERSION}-py2.py3-none-any.whl
+          pip show nessus-file-reader
         shell: bash
