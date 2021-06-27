@@ -30,7 +30,7 @@ jobs:
       - name: Install locally
 
         run: |
-          if [ "$RUNNER_OS" == "Linux" or "$RUNNER_OS" == "macOS" ]; then
+          if [ "$RUNNER_OS" == "Linux" ] || [ "$RUNNER_OS" == "macOS" ] ; then
             ls
             ls dist
             TOOL_CURRENT_VERSION=`sed -e 's/.*__version__ = "\(.*\)".*/\1/' nessus_file_reader/_version.py`
