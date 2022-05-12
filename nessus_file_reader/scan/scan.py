@@ -286,7 +286,7 @@ def list_of_target_hosts_sc_fqdn_ip(root):
     :return: dictionary of fqdn and ip
     """
     target_list = []
-    target_hosts = root[0].find("Preferences/ServerPreferences/preference/[name='TARGET']/value")
+    target_hosts = root.find("Policy/Preferences/ServerPreferences/preference/[name='TARGET']/value")
     if target_hosts is not None:
         target_hosts = target_hosts.text
         target_hosts_splitted = target_hosts.split(',')
