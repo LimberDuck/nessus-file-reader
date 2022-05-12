@@ -326,14 +326,14 @@ def list_of_not_scanned_hosts(root):
     """
     Function returns list of not scanned hosts.
     :param root: root element of scan file tree
-    :return: list of not scanned hosts
+    :return: list of not scanned hosts or empty list
     """
     target_hosts = list_of_target_hosts(root)
     scanned_hosts = list_of_scanned_hosts(root)
     if target_hosts:
-        not_scanned_hosts = set(target_hosts) - set(scanned_hosts)
+        not_scanned_hosts = list(set(target_hosts) - set(scanned_hosts))
     else:
-        not_scanned_hosts = None
+        not_scanned_hosts = []
     return not_scanned_hosts
 
 
