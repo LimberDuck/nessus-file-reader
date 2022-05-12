@@ -305,7 +305,7 @@ def report_hosts(root):
     :param root: root element of scan file tree
     :return: list report hosts
     """
-    hosts = root[1].findall("ReportHost")
+    hosts = root.find("Report").findall("ReportHost")
     return hosts
 
 
