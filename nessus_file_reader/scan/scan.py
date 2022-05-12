@@ -74,16 +74,21 @@ def server_preference_value(root, preference_name):
     return preference_value
 
 
-def source_of_file(root):
+def scan_file_source(root):
     """
-    Function returns information about source of file, Tenable.sc or Nessus.
+    Function returns information about source of file, Tenable.sc Tenable.io or Nessus.
     :param root: root element of scan file tree
     :return:
         'Tenable.sc' if Tenable.sc is source of nessus file
+        'Tenable.io' if Tenable.io is source of nessus file
         'Nessus' if Nessus is source of nessus file
     """
+    tenableio_site_id = server_preference_value(root, 'tenableio.site_id')
     sc_version = server_preference_value(root, 'sc_version')
-    if sc_version is not None:
+
+    if tenableio_site_id is not None:
+        source = 'Tenable.io'
+    elif sc_version is not None:
         source = 'Tenable.sc'
     else:
         source = 'Nessus'
