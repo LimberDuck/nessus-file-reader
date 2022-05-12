@@ -170,7 +170,7 @@ def plugin_preference_value(root, full_preference_name):
     :return: preference value or None
     """
     preference = \
-        root[0].find("Preferences/PluginsPreferences/item/[fullName='" + full_preference_name + "']/selectedValue")
+        root.find("Policy/Preferences/PluginsPreferences/item/[fullName='" + full_preference_name + "']/selectedValue")
     if preference is not None:
         preference_value = preference.text
     else:
