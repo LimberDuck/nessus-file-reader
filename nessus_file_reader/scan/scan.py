@@ -148,6 +148,20 @@ def plugin_set(root):
     return plugin_set_list
 
 
+def plugin_set_number(root):
+    """
+    Function returns number of plugins selected in policy used during scan.
+    :param root: root element of scan file tree
+    :return: number of plugins selected in policy
+    """
+    plugin_set_list = plugin_set(root)
+    if plugin_set_list is not None:
+        plugin_set_len = len(plugin_set_list)
+    else:
+        plugin_set_len = None
+    return plugin_set_len
+
+
 def plugin_preference_value(root, full_preference_name):
     """
     Function returns value for given full preference name of plugin.
