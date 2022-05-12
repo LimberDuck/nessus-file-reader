@@ -41,7 +41,14 @@ def policy_name(root):
     :param root: root element of scan file tree
     :return: policy name
     """
-    name = root[0].find("policyName").text
+    if root.find("Policy"):
+        name = root.find("Policy").find("policyName")
+        if name is not None:
+            name = name.text
+        else:
+            name = None
+    else:
+        name = None
     return name
 
 
