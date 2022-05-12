@@ -254,7 +254,7 @@ def list_of_target_hosts(root):
     :param root: root element of scan file tree
     :return: list of targets
     """
-    target_hosts = root[0].find("Preferences/ServerPreferences/preference/[name='TARGET']/value")
+    target_hosts = root.find("Policy/Preferences/ServerPreferences/preference/[name='TARGET']/value")
     target_hosts_final_list = []
     if target_hosts is not None:
         target_hosts = target_hosts.text
