@@ -409,9 +409,12 @@ def number_of_scanned_hosts_with_credentialed_checks_yes(root):
 
     for report_host in report_hosts(root):
         pido_19506 = plugin.plugin_output(root, report_host, '19506')
-        if "No output recorded." not in pido_19506 \
-                or "Check Audit Trail" not in pido_19506 \
-                or "19506 not enabled." not in pido_19506:
+        if "no output recorded" in pido_19506 \
+                or "check Audit Trail" in pido_19506 \
+                or "not enabled." in pido_19506 \
+                or "info about used plugins not available" in pido_19506:
+            number_of_report_hosts_with_credentialed_checks = None
+        else:
             for line in pido_19506.split('\n'):
                 if re.findall('Credentialed checks :', line):
                     if re.findall('yes', line):
