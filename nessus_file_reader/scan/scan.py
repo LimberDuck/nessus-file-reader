@@ -341,7 +341,7 @@ def list_of_not_scanned_hosts(root):
     if target_hosts:
         not_scanned_hosts = list(set(target_hosts) - set(scanned_hosts))
     else:
-        not_scanned_hosts = []
+        not_scanned_hosts = None
     return not_scanned_hosts
 
 
