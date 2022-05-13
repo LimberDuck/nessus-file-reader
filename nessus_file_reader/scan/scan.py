@@ -511,15 +511,16 @@ def scan_time_elapsed(root):
     :param root: root element of scan file tree
     :return: scan time elapsed in format HH:MM:SS
     """
-    min_date_start_check = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
+
+    min_date_start_check = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
 
     if min_date_start_check is not None:
         min_date_start = min_date_start_check.text
         min_date_start_parsed = datetime.datetime.strptime(min_date_start, "%a %b %d %H:%M:%S %Y")
-        max_date_end = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
+        max_date_end = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
         max_date_end_parsed = datetime.datetime.strptime(max_date_end, "%a %b %d %H:%M:%S %Y")
 
-        for reportHost in root[1].findall("ReportHost"):
+        for reportHost in root.find("Report").findall("ReportHost"):
             host_end_time_find = reportHost[0].find("tag/[@name='HOST_END']")
             if host_end_time_find is not None:
                 host_end_time = host_end_time_find.text
