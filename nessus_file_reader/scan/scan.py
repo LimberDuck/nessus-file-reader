@@ -420,7 +420,7 @@ def number_of_scanned_dbs_with_credentialed_checks_yes(root):
     """
     number_of_scanned_dbs_with_credentialed_checks = 0
 
-    for report_host in root[1].findall("ReportHost"):
+    for report_host in report_hosts(root):
 
         # "91825: Oracle DB Login Possible"
         pido_91825 = plugin.plugin_output(root, report_host, '91825')
