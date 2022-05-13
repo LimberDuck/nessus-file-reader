@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import re
 import ipaddress
-
+from xml.etree.ElementTree import parse
 
 def ip_range_split(ip_range):
     """
@@ -48,3 +48,127 @@ def ip_range_split(ip_range):
             ip_addresses.append(ip)
 
     return ip_addresses
+
+
+def nessus_scan_file_structure(file):
+    """
+    Function returns the root element for tree of given nessus file with scan results.
+    :param file: given nessus file
+
+    """
+
+    nessus_scan_file_parsed = parse(file)
+    root = nessus_scan_file_parsed.getroot()
+
+    root_level = len(root)
+    root_level_all = len(root)
+    for child_level_1 in root:
+        print(f'{child_level_1.tag} [{root_level}/{root_level_all}]')
+
+        child_level_1_len = len(child_level_1)
+        child_level_1_all = len(child_level_1)-1
+        root_level -= 1
+        # print(f'{root_level}')
+        for child_level_2 in child_level_1:
+            child_level_1_len -= 1
+            # print(f'{root_level} {child_level_1_len}')
+            if child_level_1_len:
+                print(f"├── {child_level_2.tag} [{child_level_1_len}/{child_level_1_all}]")
+            else:
+                print(f"└── {child_level_2.tag} [{child_level_1_len}/{child_level_1_all}]")
+
+            child_level_2_len = len(child_level_2)
+            child_level_2_len_all = len(child_level_2)-1
+
+            for child_level_3 in child_level_2:
+                child_level_2_len -= 1
+                child_level_3_len = len(child_level_3)
+                child_level_3_len_all = len(child_level_3)-1
+                # print(f'{root_level} {child_level_1_len} {child_level_2_len}')
+
+                if child_level_1_len and child_level_2_len:
+                    print(f"│   ├── {child_level_3.tag} [{child_level_2_len}/{child_level_2_len_all}]")
+                elif child_level_1_len and not child_level_2_len:
+                    print(f"│   └── {child_level_3.tag} [{child_level_2_len}/{child_level_2_len_all}]")
+                elif not root_level and not child_level_1_len and child_level_2_len:
+                    print(f"    ├── {child_level_3.tag} [{child_level_2_len}/{child_level_2_len_all}]")
+                elif not root_level and  not child_level_1_len and not child_level_2_len:
+                    print(f"    └── {child_level_3.tag} [{child_level_2_len}/{child_level_2_len_all}]")
+                elif root_level and not child_level_1_len and child_level_2_len:
+                    print(f"│   ├── {child_level_3.tag} [{child_level_2_len}/{child_level_2_len_all}]")
+                elif root_level and not child_level_1_len and not child_level_2_len:
+                    print(f"│   └── {child_level_3.tag} [{child_level_2_len}/{child_level_2_len_all}]")
+                else:
+                    print(f"?3 {child_level_3.tag}")
+
+                for child_level_4 in child_level_3:
+                    child_level_3_len -= 1
+                    # print(f'{root_level} {child_level_1_len} {child_level_2_len} {child_level_3_len}')
+
+                    if child_level_1_len and child_level_2_len and child_level_3_len:
+                        print(f"│   │   ├── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif child_level_1_len and child_level_2_len and not child_level_3_len:
+                        print(f"│   │   └── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif child_level_1_len and not child_level_2_len and child_level_3_len:
+                        print(f"│       ├── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif child_level_1_len and not child_level_2_len and not child_level_3_len:
+                        print(f"│       └── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif not root_level and not child_level_1_len and child_level_2_len and child_level_3_len:
+                        print(f"    │   ├── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif not root_level and not child_level_1_len and child_level_2_len and not child_level_3_len:
+                        print(f"    │   └── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif not root_level and not child_level_1_len and not child_level_2_len and child_level_3_len:
+                        print(f"        ├── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif not root_level and not child_level_1_len and not child_level_2_len and not child_level_3_len:
+                        print(f"        └── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif root_level and not child_level_1_len and child_level_2_len and child_level_3_len:
+                        print(f"│   │   ├── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif root_level and  not child_level_1_len and child_level_2_len and not child_level_3_len:
+                        print(f"│   │   └── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif root_level and  not child_level_1_len and not child_level_2_len and child_level_3_len:
+                        print(f"│       ├── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    elif root_level and not child_level_1_len and not child_level_2_len and not child_level_3_len:
+                        print(f"│       └── {child_level_4.tag} [{child_level_3_len}/{child_level_3_len_all}]")
+                    else:
+                        print(f"?4 {child_level_4.tag}")
+
+                    child_level_4_len = len(child_level_4)
+                    child_level_4_lena_all = len(child_level_4)-1
+                    for child_level_5 in child_level_4:
+                        child_level_4_len -= 1
+                        # print(f'{root_level} {child_level_1_len} {child_level_2_len} {child_level_3_len} {child_level_4_len}')
+
+                        if child_level_1_len and child_level_2_len and child_level_3_len and child_level_4_len:
+                            print(f"│   │   │   ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and child_level_2_len and child_level_3_len and not child_level_4_len:
+                            print(f"│   │   │   └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and child_level_2_len and not child_level_3_len and child_level_4_len:
+                            print(f"│   │       ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and child_level_2_len and not child_level_3_len and not child_level_4_len:
+                            print(f"│   │       └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and not child_level_2_len and child_level_3_len and child_level_4_len:
+                            print(f"│       │   ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and not child_level_2_len and child_level_3_len and not child_level_4_len:
+                            print(f"│       │   └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and not child_level_2_len and not child_level_3_len and child_level_4_len:
+                            print(f"│           ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif child_level_1_len and not child_level_2_len and not child_level_3_len and not child_level_4_len:
+                            print(f"│           └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and child_level_2_len and child_level_3_len and child_level_4_len:
+                            print(f"    │   │   ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and child_level_2_len and child_level_3_len and not child_level_4_len:
+                            print(f"    │   │   └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and child_level_2_len and not child_level_3_len and child_level_4_len:
+                            print(f"    │       ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and child_level_2_len and not child_level_3_len and not child_level_4_len:
+                            print(f"    │       └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and not child_level_2_len and child_level_3_len and child_level_4_len:
+                            print(f"        │   ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and not child_level_2_len and child_level_3_len and not child_level_4_len:
+                            print(f"        │   └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and not child_level_2_len and not child_level_3_len and child_level_4_len:
+                            print(f"            ├── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        elif not child_level_1_len and not child_level_2_len and not child_level_3_len and not child_level_4_len:
+                            print(f"            └── {child_level_5.tag} [{child_level_4_len}/{child_level_4_lena_all}]")
+                        else:
+                            print(f"?5 {child_level_5.tag} [{child_level_4_len}]")

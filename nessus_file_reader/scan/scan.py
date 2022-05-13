@@ -41,7 +41,14 @@ def policy_name(root):
     :param root: root element of scan file tree
     :return: policy name
     """
-    name = root[0].find("policyName").text
+    if root.find("Policy"):
+        name = root.find("Policy").find("policyName")
+        if name is not None:
+            name = name.text
+        else:
+            name = None
+    else:
+        name = None
     return name
 
 
@@ -54,29 +61,38 @@ def server_preference_value(root, preference_name):
         preference value - if preference exist
         None - if preference does not exist
     """
-    status = 0
-    preference_value = None
-    for preference in root[0][1][0].findall("preference"):
-        preference_name_in_report = preference.findtext('name')
-        if preference_name_in_report == preference_name:
-            preference_value = preference.findtext('value')
-            status = 1
-    if status == 0:
+
+    if root.find("Policy"):
+        status = 0
+        preference_value = None
+        for preference in root.find("Policy/Preferences/ServerPreferences").findall("preference"):
+            preference_name_in_report = preference.findtext('name')
+            if preference_name_in_report == preference_name:
+                preference_value = preference.findtext('value')
+                status = 1
+        if status == 0:
+            preference_value = None
+    else:
         preference_value = None
 
     return preference_value
 
 
-def source_of_file(root):
+def scan_file_source(root):
     """
-    Function returns information about source of file, Tenable.sc or Nessus.
+    Function returns information about source of file, Tenable.sc Tenable.io or Nessus.
     :param root: root element of scan file tree
     :return:
         'Tenable.sc' if Tenable.sc is source of nessus file
+        'Tenable.io' if Tenable.io is source of nessus file
         'Nessus' if Nessus is source of nessus file
     """
+    tenableio_site_id = server_preference_value(root, 'tenableio.site_id')
     sc_version = server_preference_value(root, 'sc_version')
-    if sc_version is not None:
+
+    if tenableio_site_id is not None:
+        source = 'Tenable.io'
+    elif sc_version is not None:
         source = 'Tenable.sc'
     else:
         source = 'Nessus'
@@ -132,8 +148,26 @@ def plugin_set(root):
     :param root: root element of scan file tree
     :return: list of plugins selected in policy or None
     """
-    plugin_set_list = server_preference_value(root, 'plugin_set').split(';')
+    plugin_set_list = server_preference_value(root, 'plugin_set')
+    if plugin_set_list:
+        plugin_set_list = plugin_set_list[:-1].split(';')
+    else:
+        plugin_set_list = None
     return plugin_set_list
+
+
+def plugin_set_number(root):
+    """
+    Function returns number of plugins selected in policy used during scan.
+    :param root: root element of scan file tree
+    :return: number of plugins selected in policy
+    """
+    plugin_set_list = plugin_set(root)
+    if plugin_set_list is not None:
+        plugin_set_len = len(plugin_set_list)
+    else:
+        plugin_set_len = None
+    return plugin_set_len
 
 
 def plugin_preference_value(root, full_preference_name):
@@ -144,7 +178,7 @@ def plugin_preference_value(root, full_preference_name):
     :return: preference value or None
     """
     preference = \
-        root[0].find("Preferences/PluginsPreferences/item/[fullName='" + full_preference_name + "']/selectedValue")
+        root.find("Policy/Preferences/PluginsPreferences/item/[fullName='" + full_preference_name + "']/selectedValue")
     if preference is not None:
         preference_value = preference.text
     else:
@@ -210,7 +244,7 @@ def list_of_target_hosts_raw(root):
     :param root: root element of scan file tree
     :return: list of targets
     """
-    target_hosts = root[0].find("Preferences/ServerPreferences/preference/[name='TARGET']/value")
+    target_hosts = root.find("Policy/Preferences/ServerPreferences/preference/[name='TARGET']/value")
     if target_hosts is not None:
         target_hosts = target_hosts.text
         target_hosts_splitted = target_hosts.split(',')
@@ -228,7 +262,7 @@ def list_of_target_hosts(root):
     :param root: root element of scan file tree
     :return: list of targets
     """
-    target_hosts = root[0].find("Preferences/ServerPreferences/preference/[name='TARGET']/value")
+    target_hosts = root.find("Policy/Preferences/ServerPreferences/preference/[name='TARGET']/value")
     target_hosts_final_list = []
     if target_hosts is not None:
         target_hosts = target_hosts.text
@@ -260,7 +294,7 @@ def list_of_target_hosts_sc_fqdn_ip(root):
     :return: dictionary of fqdn and ip
     """
     target_list = []
-    target_hosts = root[0].find("Preferences/ServerPreferences/preference/[name='TARGET']/value")
+    target_hosts = root.find("Policy/Preferences/ServerPreferences/preference/[name='TARGET']/value")
     if target_hosts is not None:
         target_hosts = target_hosts.text
         target_hosts_splitted = target_hosts.split(',')
@@ -279,7 +313,7 @@ def report_hosts(root):
     :param root: root element of scan file tree
     :return: list report hosts
     """
-    hosts = root[1].findall("ReportHost")
+    hosts = root.find("Report").findall("ReportHost")
     return hosts
 
 
@@ -300,12 +334,12 @@ def list_of_not_scanned_hosts(root):
     """
     Function returns list of not scanned hosts.
     :param root: root element of scan file tree
-    :return: list of not scanned hosts
+    :return: list of not scanned hosts or empty list
     """
     target_hosts = list_of_target_hosts(root)
     scanned_hosts = list_of_scanned_hosts(root)
     if target_hosts:
-        not_scanned_hosts = set(target_hosts) - set(scanned_hosts)
+        not_scanned_hosts = list(set(target_hosts) - set(scanned_hosts))
     else:
         not_scanned_hosts = None
     return not_scanned_hosts
@@ -317,7 +351,11 @@ def number_of_target_hosts(root):
     :param root: root element of scan file tree
     :return: number of target hosts
     """
-    number_of_targets = len(list_of_target_hosts(root))
+    target_hosts = list_of_target_hosts(root)
+    if target_hosts is not None:
+        number_of_targets = len(target_hosts)
+    else:
+        number_of_targets = None
     return number_of_targets
 
 
@@ -332,7 +370,7 @@ def number_of_target_hosts_without_duplicates(root):
     if target_hosts:
         actual_number_of_targets = len(set(target_hosts))
     else:
-        actual_number_of_targets = 0
+        actual_number_of_targets = None
 
     return actual_number_of_targets
 
@@ -353,8 +391,12 @@ def number_of_not_scanned_hosts(root):
     :param root: root element of scan file tree
     :return: number of not scanned hosts
     """
-    number = len(list_of_not_scanned_hosts(root))
-    return number
+    not_scanned_hosts = list_of_not_scanned_hosts(root)
+    if not_scanned_hosts:
+        number_of_not_scanned_hosts = len(not_scanned_hosts)
+    else:
+        number_of_not_scanned_hosts = None
+    return number_of_not_scanned_hosts
 
 
 def number_of_scanned_hosts_with_credentialed_checks_yes(root):
@@ -365,11 +407,14 @@ def number_of_scanned_hosts_with_credentialed_checks_yes(root):
     """
     number_of_report_hosts_with_credentialed_checks = 0
 
-    for report_host in root[1].findall("ReportHost"):
+    for report_host in report_hosts(root):
         pido_19506 = plugin.plugin_output(root, report_host, '19506')
-        if "No output recorded." not in pido_19506 \
-                or "Check Audit Trail" not in pido_19506 \
-                or "19506 not enabled." not in pido_19506:
+        if "no output recorded" in pido_19506 \
+                or "check Audit Trail" in pido_19506 \
+                or "not enabled." in pido_19506 \
+                or "info about used plugins not available" in pido_19506:
+            number_of_report_hosts_with_credentialed_checks = None
+        else:
             for line in pido_19506.split('\n'):
                 if re.findall('Credentialed checks :', line):
                     if re.findall('yes', line):
@@ -386,7 +431,7 @@ def number_of_scanned_dbs_with_credentialed_checks_yes(root):
     """
     number_of_scanned_dbs_with_credentialed_checks = 0
 
-    for report_host in root[1].findall("ReportHost"):
+    for report_host in report_hosts(root):
 
         # "91825: Oracle DB Login Possible"
         pido_91825 = plugin.plugin_output(root, report_host, '91825')
@@ -407,16 +452,17 @@ def scan_time_start(root):
     :param root: root element of scan file tree
     :return: date and time when scan has been started
     """
-    min_date_start_check = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
+
+    min_date_start_check = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
 
     if min_date_start_check is not None:
         min_date_start = min_date_start_check.text
         min_date_start_parsed = datetime.datetime.strptime(min_date_start, "%a %b %d %H:%M:%S %Y")
 
-        max_date_end = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
+        max_date_end = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
         max_date_end_parsed = datetime.datetime.strptime(max_date_end, "%a %b %d %H:%M:%S %Y")
 
-        for reportHost in root[1].findall("ReportHost"):
+        for reportHost in root.find("Report").findall("ReportHost"):
             host_end_time_find = reportHost[0].find("tag/[@name='HOST_END']")
             if host_end_time_find is not None:
                 host_end_time = host_end_time_find.text
@@ -441,16 +487,17 @@ def scan_time_end(root):
     :param root: root element of scan file tree
     :return: date and time when scan has been ended
     """
-    min_date_start_check = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
+
+    min_date_start_check = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
 
     if min_date_start_check is not None:
         min_date_start = min_date_start_check.text
         min_date_start_parsed = datetime.datetime.strptime(min_date_start, "%a %b %d %H:%M:%S %Y")
 
-        max_date_end = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
+        max_date_end = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
         max_date_end_parsed = datetime.datetime.strptime(max_date_end, "%a %b %d %H:%M:%S %Y")
 
-        for reportHost in root[1].findall("ReportHost"):
+        for reportHost in root.find("Report").findall("ReportHost"):
             host_end_time_find = reportHost[0].find("tag/[@name='HOST_END']")
             if host_end_time_find is not None:
                 host_end_time = host_end_time_find.text
@@ -475,15 +522,16 @@ def scan_time_elapsed(root):
     :param root: root element of scan file tree
     :return: scan time elapsed in format HH:MM:SS
     """
-    min_date_start_check = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
+
+    min_date_start_check = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_START']")
 
     if min_date_start_check is not None:
         min_date_start = min_date_start_check.text
         min_date_start_parsed = datetime.datetime.strptime(min_date_start, "%a %b %d %H:%M:%S %Y")
-        max_date_end = root[1].find("ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
+        max_date_end = root.find("Report/ReportHost[1]/HostProperties/tag/[@name='HOST_END']").text
         max_date_end_parsed = datetime.datetime.strptime(max_date_end, "%a %b %d %H:%M:%S %Y")
 
-        for reportHost in root[1].findall("ReportHost"):
+        for reportHost in root.find("Report").findall("ReportHost"):
             host_end_time_find = reportHost[0].find("tag/[@name='HOST_END']")
             if host_end_time_find is not None:
                 host_end_time = host_end_time_find.text

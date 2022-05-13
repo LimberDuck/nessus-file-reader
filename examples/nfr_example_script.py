@@ -64,18 +64,25 @@ def nfr_example_simple():
 
                 # Use *scan* functions to get details about provided scan e.g. report name,
                 # number of target/scanned/credentialed hosts, scan time start/end/elapsed and more.
+                scan_file_source = nfr.scan.scan_file_source(root)
+                print(f' Source of file: {scan_file_source}')
+                report_hosts = nfr.scan.report_hosts(root)
+                print(f' Report hosts: {report_hosts}')
                 report_name = nfr.scan.report_name(root)
+                policy_name = nfr.scan.policy_name(root)
+                print(f' Report name: {report_name}')
+                print(f' Policy name: {policy_name}')
                 number_of_target_hosts = nfr.scan.number_of_target_hosts(root)
+                print(f' Number of target: {number_of_target_hosts}')
                 number_of_scanned_hosts = nfr.scan.number_of_scanned_hosts(root)
+                print(f' Number of scanned: {number_of_scanned_hosts}')
                 number_of_scanned_hosts_with_credentialed_checks_yes = \
-                    nfr.scan.number_of_scanned_hosts_with_credentialed_checks_yes(root)
+                nfr.scan.number_of_scanned_hosts_with_credentialed_checks_yes(root)
+                print(f' Number of credentialed hosts: {number_of_scanned_hosts_with_credentialed_checks_yes}')
+
                 scan_time_start = nfr.scan.scan_time_start(root)
                 scan_time_end = nfr.scan.scan_time_end(root)
                 scan_time_elapsed = nfr.scan.scan_time_elapsed(root)
-                print(f' Report name: {report_name}')
-                print(f' Number of target/scanned/credentialed hosts: '
-                      f'{number_of_target_hosts}/{number_of_scanned_hosts}/'
-                      f'{number_of_scanned_hosts_with_credentialed_checks_yes}')
                 print(f' Scan time START - END (ELAPSED): {scan_time_start} - {scan_time_end} ({scan_time_elapsed})')
                 print('')
 
