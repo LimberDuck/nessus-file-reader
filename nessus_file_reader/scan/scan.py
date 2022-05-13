@@ -61,14 +61,18 @@ def server_preference_value(root, preference_name):
         preference value - if preference exist
         None - if preference does not exist
     """
-    status = 0
-    preference_value = None
-    for preference in root[0][1][0].findall("preference"):
-        preference_name_in_report = preference.findtext('name')
-        if preference_name_in_report == preference_name:
-            preference_value = preference.findtext('value')
-            status = 1
-    if status == 0:
+
+    if root.find("Policy"):
+        status = 0
+        preference_value = None
+        for preference in root.find("Policy/Preferences/ServerPreferences").findall("preference"):
+            preference_name_in_report = preference.findtext('name')
+            if preference_name_in_report == preference_name:
+                preference_value = preference.findtext('value')
+                status = 1
+        if status == 0:
+            preference_value = None
+    else:
         preference_value = None
 
     return preference_value
