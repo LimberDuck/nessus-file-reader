@@ -144,7 +144,11 @@ def plugin_set(root):
     :param root: root element of scan file tree
     :return: list of plugins selected in policy or None
     """
-    plugin_set_list = server_preference_value(root, 'plugin_set')[:-1].split(';')
+    plugin_set_list = server_preference_value(root, 'plugin_set')
+    if plugin_set_list:
+        plugin_set_list = plugin_set_list[:-1].split(';')
+    else:
+        plugin_set_list = None
     return plugin_set_list
 
 
