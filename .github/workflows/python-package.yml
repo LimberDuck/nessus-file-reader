@@ -1,6 +1,7 @@
 name: Python package
 
 on: [push]
+  workflow_dispatch:
 
 env:
   python_package_name: nessus-file-reader
