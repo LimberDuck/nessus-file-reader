@@ -391,8 +391,12 @@ def number_of_not_scanned_hosts(root):
     :param root: root element of scan file tree
     :return: number of not scanned hosts
     """
-    number = len(list_of_not_scanned_hosts(root))
-    return number
+    not_scanned_hosts = list_of_not_scanned_hosts(root)
+    if not_scanned_hosts:
+        number_of_not_scanned_hosts = len(not_scanned_hosts)
+    else:
+        number_of_not_scanned_hosts = None
+    return number_of_not_scanned_hosts
 
 
 def number_of_scanned_hosts_with_credentialed_checks_yes(root):
