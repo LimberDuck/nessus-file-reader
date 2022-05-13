@@ -343,7 +343,11 @@ def number_of_target_hosts(root):
     :param root: root element of scan file tree
     :return: number of target hosts
     """
-    number_of_targets = len(list_of_target_hosts(root))
+    target_hosts = list_of_target_hosts(root)
+    if target_hosts is not None:
+        number_of_targets = len(target_hosts)
+    else:
+        number_of_targets = None
     return number_of_targets
 
 
