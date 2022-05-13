@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **commandline interface** - from now on this package will provide you possibility to run `nfr` in commandline. After installation type `nf` or `nfr --help` to find out more.
+- **commandline interface** - from now on this package will provide you possibility to run `nfr` in commandline. After installation type `nfr` or `nfr --help` to find out more.
 - **Tenable.io files support** - initial support to pars nessus files coming from Tenable.io
 
 
