@@ -399,7 +399,7 @@ def number_of_scanned_hosts_with_credentialed_checks_yes(root):
     """
     number_of_report_hosts_with_credentialed_checks = 0
 
-    for report_host in root[1].findall("ReportHost"):
+    for report_host in report_hosts(root):
         pido_19506 = plugin.plugin_output(root, report_host, '19506')
         if "No output recorded." not in pido_19506 \
                 or "Check Audit Trail" not in pido_19506 \
