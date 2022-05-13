@@ -3,8 +3,8 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+# with open('requirements.txt') as f:
+#     required = f.read().splitlines()
 
 about = {}
 with open("nessus_file_reader/_version.py") as f:
@@ -20,16 +20,17 @@ setuptools.setup(
                 "created to quickly parse nessus files containing the results of scans "
                 "performed by using Nessus by (C) Tenable, Inc.",
     long_description=long_description,
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     url="https://github.com/LimberDuck/nessus-file-reader",
     packages=setuptools.find_packages(),
-    install_requires=required,
+    # install_requires=required,
     entry_points={
         "console_scripts": [
             "nfr = nessus_file_reader.__main__:main"
         ]
     },
     classifiers=[
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
