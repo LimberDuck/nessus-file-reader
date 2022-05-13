@@ -370,7 +370,7 @@ def number_of_target_hosts_without_duplicates(root):
     if target_hosts:
         actual_number_of_targets = len(set(target_hosts))
     else:
-        actual_number_of_targets = 0
+        actual_number_of_targets = None
 
     return actual_number_of_targets
 
