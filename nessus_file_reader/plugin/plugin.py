@@ -75,34 +75,41 @@ def plugin_outputs(root, report_host, plugin_id):
     :param plugin_id: plugin id
     :return:
         plugin_output - content of plugin output is returned if plugin occurs in report and has an output.
-        'No output recorded.' - information if plugin occurs in report but does not contain any output.
-        'Check Audit Trail.' - information if plugin has been used during scan but does not appear in report at all.
-        '{plugin_id} not enabled.' - information if plugin has not been enabled in policy for scan.
+        '{plugin_id} - no output recorded' - information if plugin occurs in report but does not contain any output.
+        '{plugin_id} - check Audit Trail' - information if plugin has been used during scan but does not appear in report at all.
+        '{plugin_id} - not enabled' - information if plugin has not been enabled in policy for scan.
+        '{plugin_id} - info about used plugins not available' - information if plugin_set from policy settings not available.
 
     """
     plugin_id = str(plugin_id)
     plugin_output_content = list()
+    plugin_set = scan.plugin_set(root)
     status = 0
 
-    if plugin_id in scan.plugin_set(root):
-        for report_item in report_host.findall("ReportItem"):
-            plugin_id_from_report = report_item.get('pluginID')
-            if plugin_id_from_report == plugin_id:
-                plugin_output_item = report_item.find('plugin_output')
-                if plugin_output_item is None:
-                    plugin_output_content.append('No output recorded.')
-                else:
-                    plugin_output_content.append(plugin_output_item.text)
-                status = 1
-        if status == 0:
-            plugin_output_content.append('Check Audit Trail.')
+    for report_item in report_host.findall("ReportItem"):
+        plugin_id_from_report = report_item.get('pluginID')
+        if plugin_id_from_report == plugin_id:
+            plugin_output_item = report_item.find('plugin_output')
+            if plugin_output_item is None:
+                plugin_output_content.append(f'{plugin_id} - no output recorded')
+            else:
+                plugin_output_content.append(plugin_output_item.text)
+            status = 1
+    if status == 0:
+        plugin_output_content.append(f'{plugin_id} - check Audit Trail')
 
-        if len(plugin_output_content) == 1:
-            plugin_output_content = plugin_output_content[0]
+    if f'{plugin_id} - check Audit Trail' in plugin_output_content:
+
+        if plugin_set is not None:
+            if plugin_id not in scan.plugin_set(root):
+                plugin_output_content = [f'{plugin_id} - not enabled']
         else:
-            plugin_output_content = '\n'.join(plugin_output_content)
+            plugin_output_content = [f'{plugin_id} - info about used plugins not available']
+
+    if len(plugin_output_content) == 1:
+        plugin_output_content = plugin_output_content[0]
     else:
-        plugin_output_content = f'{plugin_id} not enabled.'
+        plugin_output_content = '\n'.join(plugin_output_content)
 
     return plugin_output_content
 
