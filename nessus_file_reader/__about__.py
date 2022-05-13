@@ -27,14 +27,14 @@ __all__ = [
 __title__ = "nessus file reader by LimberDuck"
 __package_name__ = "nessus-file-reader"
 __icon__ = "LimberDuck-nessus-file-reader.ico"
-__summary__ = "nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module" \
+__summary__ = "nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module" \
               "created to quickly parse nessus files containing the results of scans" \
               "performed by using Nessus by (C) Tenable, Inc."
 __uri__ = "https://github.com/LimberDuck"
-__version__ = "0.1.0"
-__release_date__ = "2019.06.23"
+__version__ = "0.4.1"
+__release_date__ = "2022.05.13"
 __author__ = u"Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"
 __license_link__ = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-__copyright__ = u"\N{COPYRIGHT SIGN} 2019 by %s" % __author__
+__copyright__ = u"\N{COPYRIGHT SIGN} 2019-2022 by %s" % __author__
