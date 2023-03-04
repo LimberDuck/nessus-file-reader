@@ -116,10 +116,13 @@ def detected_os(report_host):
     :return: os for given target
     """
     operating_system = host_property_value(report_host, 'operating-system')
-    if "&quot;" in operating_system:
-        operating_system = str(operating_system).strip('[&quot;').strip('&quot;]')
+    if operating_system is not None:
+        if "&quot;" in operating_system:
+            operating_system = str(operating_system).strip('[&quot;').strip('&quot;]')
+        else:
+            operating_system = str(operating_system).strip('["').strip('"]')
     else:
-        operating_system = str(operating_system).strip('["').strip('"]')
+        operating_system = ''
     return operating_system
 
 

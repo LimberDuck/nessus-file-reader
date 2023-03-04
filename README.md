@@ -2,9 +2,9 @@
 
 **nessus file reader** by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
 and python module created to quickly parse nessus files containing the results 
-of scans performed by using Nessus by (C) Tenable, Inc. This module will let 
-you get data through functions grouped into categories like file, scan, host 
-and plugin to get specific information from the provided nessus scan files.
+of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc. This module will let 
+you get data through functions grouped into categories like `file`, `scan`, `host` 
+and `plugin` to get specific information from the provided nessus scan files.
 
 [![Latest Release version](https://img.shields.io/github/v/release/LimberDuck/nessus-file-reader?label=Latest%20release)](https://github.com/LimberDuck/nessus-file-reader/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date/limberduck/nessus-file-reader?label=released&logo=GitHub)](https://github.com/LimberDuck/nessus-file-reader/releases)
@@ -15,10 +15,13 @@ and plugin to get specific information from the provided nessus scan files.
 [![Code size](https://img.shields.io/github/languages/code-size/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader)
 [![Supported platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey.svg)](https://github.com/LimberDuck/nessus-file-reader)
 
+![](https://user-images.githubusercontent.com/9287709/222918443-5c88c441-e7b7-4298-93a2-a730fd8ff081.png)
+
 ## Main features
 
-* read data from nessus files containing results of scans performed by using Nessus by (C) Tenable, Inc.
-* use it in CLI or as python module
+* read data from nessus files containing results of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc.
+* use it in CLI to check quickly e.g. quality of your scan
+* use it as python module
 
 > Check code [examples].
 
@@ -40,9 +43,9 @@ Install **nessus file reader**
 > `pip install -U nessus-file-reader`
 
 
-## Use
+## How to
 
-### Use in CLI
+### Use nfr in CLI
 
 1. Run **nessus file reader**
 
@@ -52,7 +55,164 @@ Install **nessus file reader**
    
    `nfr [command] --help` e.g. `nfr file --help`
 
-### Use as python module
+#### File command
+
+Run `nfr file --help` to see options related to nessus file.
+
+##### File size
+
+Check size of given file:
+```commandline
+nfr file --size test_files/scan_avrx9t.nessus
+nessus file reader by LimberDuck 0.4.2
+test_files/scan_avrx9t.nessus 2.4 MiB
+```
+
+more than one file:
+```commandline
+nfr file --size test_files/scan_avrx9t.nessus test_files/scan_ihc1js.nessus
+nessus file reader by LimberDuck 0.4.2
+test_files/scan_avrx9t.nessus 2.4 MiB
+test_files/scan_ihc1js.nessus 5.0 MiB
+```
+
+all files in given directory and it's subdirectories:
+```commandline
+nfr file --size test_files  
+nessus file reader by LimberDuck 0.4.2                                                      
+test_files/scan_avrx9t.nessus 2.4 MiB
+test_files/scan_ihc1js.nessus 5.0 MiB
+test_files/test_subdirectory/scan_ihc1js.nessus 878.3 KiB
+```
+
+##### File structure
+
+Check structure of given file:
+
+```commandline
+nfr file --structure test_files/scan_avrx9t.nessus
+nessus file reader by LimberDuck 0.4.2
+test_files/scan_avrx9t.nessus
+Policy [2/2]
+├── policyName [3/3]
+├── Preferences [2/3]
+│   ├── ServerPreferences [1/1]
+│   │   ├── preference [54/54]
+│   │   │   ├── name [1/1]
+│   │   │   └── value [0/1]
+│   │   ├── preference [53/54]
+...
+│   └── PluginsPreferences [0/1]
+│       ├── item [506/506]
+│       │   ├── pluginName [6/6]
+│       │   ├── pluginId [5/6]
+│       │   ├── fullName [4/6]
+│       │   ├── preferenceName [3/6]
+│       │   ├── preferenceType [2/6]
+│       │   ├── preferenceValues [1/6]
+│       │   └── selectedValue [0/6]
+│       ├── item [505/506]
+...
+├── FamilySelection [1/3]
+│   ├── FamilyItem [53/53]
+│   │   ├── FamilyName [1/1]
+│   │   └── Status [0/1]
+│   ├── FamilyItem [52/53]
+│   │   ├── FamilyName [1/1]
+│   │   └── Status [0/1]
+...
+└── IndividualPluginSelection [0/3]
+│   ├── PluginItem [6/6]
+│   │   ├── PluginId [3/3]
+│   │   ├── PluginName [2/3]
+│   │   ├── Family [1/3]
+│   │   └── Status [0/3]
+...
+Report [1/2]
+└── ReportHost [0/0]
+    ├── HostProperties [409/409]
+    │   ├── tag [354/354]
+    │   ├── tag [353/354]
+...
+    ├── ReportItem [408/409]
+    │   ├── agent [12/12]
+    │   ├── description [11/12]
+    │   ├── fname [10/12]
+    │   ├── plugin_modification_date [9/12]
+    │   ├── plugin_name [8/12]
+    │   ├── plugin_publication_date [7/12]
+    │   ├── plugin_type [6/12]
+    │   ├── risk_factor [5/12]
+    │   ├── script_version [4/12]
+    │   ├── see_also [3/12]
+    │   ├── solution [2/12]
+    │   ├── synopsis [1/12]
+    │   └── plugin_output [0/12]
+...
+```
+
+Check whole example structure [examples/scan_avrx9t_structure.txt](examples/scan_avrx9t_structure.txt).
+
+#### Scan command
+
+Run `nfr scan --help` to see options related to content of nessus file on scan level.
+
+##### Scan summary
+
+See scan summary of given file/-s or all files in given directory and it's subdirectories:
+
+```commandline
+nfr scan --scan-summary scan_avrx9t.nessus
+nessus file reader by LimberDuck 0.4.2
+File name           Report name     TH    SH    CC    C    H    M    L    N
+------------------  ------------  ----  ----  ----  ---  ---  ---  ---  ---
+scan_avrx9t.nessus  test scan        1     1     1   48  182  126   15   38
+```
+
+```commandline
+nfr scan --scan-summary-legend                              
+nessus file reader by LimberDuck 0.4.2
+Legend for scan summary:
+File name - nessus file name
+Report name - report name for given nessus file name
+TH - number of target hosts
+SH - number of scanned hosts
+CC - number of hosts scanned with credentials (Credentialed checks yes in Plugin ID 19506)
+C - number of plugins with Critical risk factor for whole scan
+H - number of plugins with High risk factor for whole scan
+M - number of plugins with Medium risk factor for whole scan
+L - number of plugins with Low risk factor for whole scan
+N - number of plugins with None risk factor for whole scan
+```
+
+##### Policy scan summary
+
+See policy scan summary of given file/-s or all files in given directory and it's subdirectories:
+
+```commandline
+nfr scan --policy-summary scan_ihc1js.nessus scan_avrx9t.nessus
+nessus file reader by LimberDuck 0.4.2
+File name           Policy name      Max hosts    Max checks    Checks timeout    Plugins number
+------------------  -------------  -----------  ------------  ----------------  ----------------
+scan_ihc1js.nessus  Advanced Scan          100             5                 5            103203
+scan_avrx9t.nessus  Test                   100             5                 5            103949
+
+```
+
+##### Scan file source
+
+See scan file source like Nessus, Tenable.sc, Tenable.io of given file/-s or all files in given directory and it's subdirectories:
+
+```commandline
+nfr scan --scan-file-source scan_ihc1js.nessus scan_avrx9t.nessus
+nessus file reader by LimberDuck 0.4.2
+File name           Source
+------------------  ----------
+scan_ihc1js.nessus  Tenable.sc
+scan_avrx9t.nessus  Nessus
+```
+
+### Use nfr as python module
 
 1. Import `nessus-file-reader` module.
    

@@ -5,6 +5,32 @@ This document records all notable changes to [nessus file reader by LimberDuck][
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2023-03-04
+
+### Changed
+
+- [README.md](README.md) updated with example `nfr` commadline usage.
+- `nfr scan --scan-summary` has simplified column names, to save space on the screen:
+  - `nessus_scan_file` -> `File name`
+  - `report_name` -> `Report name`
+  - `number_of_target_hosts` -> `TH`
+  - `number_of_scanned_hosts` -> `SH`
+  - `number_of_scanned_hosts_with_credentialed_checks_yes` -> `CC`
+- `nfr scan --scan-summary` has 5 new columns
+  - `C`, `H`, `M`, `L`, `N`, accordingly number of plugins with Critical, High, Medium, Low and None risk factor for whole scan  
+- `nfr scan --scan-summary-legend` command to see columns description
+- `nfr scan --policy-name` option changed to `--policy-summary`
+- `nfr scan --policy-summary` informs about Policy name and settings like Max hosts, Max checks, Check timeout, 
+Plugins number used during the scan.
+- `nfr scan --source-of-file` option changed to `--scan-file-source`
+
+### Fixed
+
+- `detected_os()` function in `host.py` handles situation if there is no Operating System detected 
+(reported by [ricardosupo](https://github.com/ricardosupo) in issue 
+[#8](https://github.com/LimberDuck/nessus-file-reader/issues/8#issue-1236020632)).
+- `nfr` CLI handles `FileNotFoundError` when you give nessus files or directory which doesn't exist.
+
 ## [0.4.1] - 2022-05-13
 
 ### Fixed
@@ -40,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
+[0.4.2]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.2.0...v0.3.0
