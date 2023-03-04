@@ -15,7 +15,7 @@ and `plugin` to get specific information from the provided nessus scan files.
 [![Code size](https://img.shields.io/github/languages/code-size/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader)
 [![Supported platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey.svg)](https://github.com/LimberDuck/nessus-file-reader)
 
-![](https://user-images.githubusercontent.com/9287709/222916772-80f4da15-231a-4a48-afef-cc66f240aeae.png)
+![](https://user-images.githubusercontent.com/9287709/222918443-5c88c441-e7b7-4298-93a2-a730fd8ff081.png)
 
 ## Main features
 
