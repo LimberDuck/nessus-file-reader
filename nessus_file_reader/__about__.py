@@ -31,10 +31,10 @@ __summary__ = "nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) i
               "created to quickly parse nessus files containing the results of scans" \
               "performed by using Nessus by (C) Tenable, Inc."
 __uri__ = "https://github.com/LimberDuck"
-__version__ = "0.4.1"
-__release_date__ = "2022.05.13"
+__version__ = "0.4.2"
+__release_date__ = "2023.03.04"
 __author__ = u"Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"
 __license_link__ = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-__copyright__ = u"\N{COPYRIGHT SIGN} 2019-2022 by %s" % __author__
+__copyright__ = u"\N{COPYRIGHT SIGN} 2019-2023 by %s" % __author__

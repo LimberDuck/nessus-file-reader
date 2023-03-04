@@ -2,9 +2,9 @@
 
 **nessus file reader** by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
 and python module created to quickly parse nessus files containing the results 
-of scans performed by using Nessus by (C) Tenable, Inc. This module will let 
-you get data through functions grouped into categories like file, scan, host 
-and plugin to get specific information from the provided nessus scan files.
+of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc. This module will let 
+you get data through functions grouped into categories like `file`, `scan`, `host` 
+and `plugin` to get specific information from the provided nessus scan files.
 
 [![Latest Release version](https://img.shields.io/github/v/release/LimberDuck/nessus-file-reader?label=Latest%20release)](https://github.com/LimberDuck/nessus-file-reader/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date/limberduck/nessus-file-reader?label=released&logo=GitHub)](https://github.com/LimberDuck/nessus-file-reader/releases)
@@ -17,8 +17,9 @@ and plugin to get specific information from the provided nessus scan files.
 
 ## Main features
 
-* read data from nessus files containing results of scans performed by using Nessus by (C) Tenable, Inc.
-* use it in CLI or as python module
+* read data from nessus files containing results of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc.
+* use it in CLI to check quickly e.g. quality of your scan
+* use it as python module
 
 > Check code [examples].
 
@@ -40,9 +41,9 @@ Install **nessus file reader**
 > `pip install -U nessus-file-reader`
 
 
-## Use
+## How to
 
-### Use in CLI
+### Use nfr in CLI
 
 1. Run **nessus file reader**
 
