@@ -9,3 +9,4 @@ nessus_file_reader.egg-info
 test_files
 .vscode
 _build
+.DS_Store

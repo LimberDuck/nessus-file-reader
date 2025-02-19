@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
@@ -30,7 +30,7 @@ def report_host_name(report_host):
     :param report_host: report host element
     :return: name of given report host
     """
-    name = report_host.get('name')
+    name = report_host.get("name")
     return name
 
 
@@ -56,12 +56,12 @@ def resolved_hostname(report_host):
     :param report_host: report host element
     :return: hostname for given target
     """
-    hostname = host_property_value(report_host, 'hostname')
+    hostname = host_property_value(report_host, "hostname")
     if hostname is not None:
         hostname = hostname.lower()
     else:
-        hostname = ''
-    return hostname.split('.')[0]
+        hostname = ""
+    return hostname.split(".")[0]
 
 
 def resolved_ip(report_host):
@@ -70,7 +70,7 @@ def resolved_ip(report_host):
     :param report_host: report host element
     :return: ip for given target
     """
-    host_ip = host_property_value(report_host, 'host-ip')
+    host_ip = host_property_value(report_host, "host-ip")
     return host_ip
 
 
@@ -80,7 +80,7 @@ def resolved_fqdn(report_host):
     :param report_host:  report host element
     :return:  fqdn for given target
     """
-    host_fqdn = host_property_value(report_host, 'host-fqdn')
+    host_fqdn = host_property_value(report_host, "host-fqdn")
     if host_fqdn is not None:
         host_fqdn = host_fqdn.lower()
     return host_fqdn
@@ -93,20 +93,24 @@ def netbios_network_name(root, report_host):
     :param report_host: report host element
     :return: os for given target
     """
-    pido_10150 = plugin.plugin_output(root, report_host, '10150')
-    pido_10150_split = pido_10150.split('\n')
+    pido_10150 = plugin.plugin_output(root, report_host, "10150")
+    pido_10150_split = pido_10150.split("\n")
 
-    netbios_computer_name = ''
-    netbios_domain_name = ''
+    netbios_computer_name = ""
+    netbios_domain_name = ""
     for netbios_data_split_entry in pido_10150_split:
-        if 'Computer name' in netbios_data_split_entry:
-            netbios_computer_name = netbios_data_split_entry.split('=')[0].strip().lower()
+        if "Computer name" in netbios_data_split_entry:
+            netbios_computer_name = (
+                netbios_data_split_entry.split("=")[0].strip().lower()
+            )
 
-        if 'Workgroup / Domain name' in netbios_data_split_entry:
-            netbios_domain_name = netbios_data_split_entry.split('=')[0].strip().lower()
+        if "Workgroup / Domain name" in netbios_data_split_entry:
+            netbios_domain_name = netbios_data_split_entry.split("=")[0].strip().lower()
 
-    return {'netbios_computer_name': netbios_computer_name,
-            'netbios_domain_name': netbios_domain_name}
+    return {
+        "netbios_computer_name": netbios_computer_name,
+        "netbios_domain_name": netbios_domain_name,
+    }
 
 
 def detected_os(report_host):
@@ -115,14 +119,14 @@ def detected_os(report_host):
     :param report_host: report host element
     :return: os for given target
     """
-    operating_system = host_property_value(report_host, 'operating-system')
+    operating_system = host_property_value(report_host, "operating-system")
     if operating_system is not None:
         if "&quot;" in operating_system:
-            operating_system = str(operating_system).strip('[&quot;').strip('&quot;]')
+            operating_system = str(operating_system).strip("[&quot;").strip("&quot;]")
         else:
             operating_system = str(operating_system).strip('["').strip('"]')
     else:
-        operating_system = ''
+        operating_system = ""
     return operating_system
 
 
@@ -134,10 +138,10 @@ def scanner_ip(root, report_host):
     :return: ip address of scanner
     """
     ip = None
-    pido_19506 = plugin.plugin_output(root, report_host, '19506')
-    for line in pido_19506.split('\n'):
-        if re.findall('Scanner IP :', line):
-            ip = re.sub('Scanner IP : ', '', line)
+    pido_19506 = plugin.plugin_output(root, report_host, "19506")
+    for line in pido_19506.split("\n"):
+        if re.findall("Scanner IP :", line):
+            ip = re.sub("Scanner IP : ", "", line)
     return ip
 
 
@@ -150,8 +154,8 @@ def login_used(report_host):
     login = None
 
     for tag in report_host[0].findall("tag"):
-        tag_name = tag.get('name')
-        if re.findall('login-used', tag_name):
+        tag_name = tag.get("name")
+        if re.findall("login-used", tag_name):
             if tag_name is not None:
                 login = tag.text
     return login
@@ -168,16 +172,18 @@ def credentialed_checks(root, report_host):
         'no' - if credentialed checks have not been enabled
     """
     credentialed = None
-    pido_19506 = plugin.plugin_output(root, report_host, '19506')
-    if "No output recorded." in pido_19506 \
-            or "Check Audit Trail" in pido_19506 \
-            or "19506 not enabled." in pido_19506:
-        credentialed = 'no'
+    pido_19506 = plugin.plugin_output(root, report_host, "19506")
+    if (
+        "No output recorded." in pido_19506
+        or "Check Audit Trail" in pido_19506
+        or "19506 not enabled." in pido_19506
+    ):
+        credentialed = "no"
     else:
-        for line in pido_19506.split('\n'):
-            if re.findall('Credentialed checks :', line):
-                credentialed = re.sub('Credentialed checks : ', '', line)
-                credentialed = re.sub('&apos;', '', credentialed)
+        for line in pido_19506.split("\n"):
+            if re.findall("Credentialed checks :", line):
+                credentialed = re.sub("Credentialed checks : ", "", line)
+                credentialed = re.sub("&apos;", "", credentialed)
 
     return credentialed
 
@@ -194,21 +200,29 @@ def credentialed_checks_db(root, report_host):
     """
     credentialed = None
     # "91825: Oracle DB Login Possible"
-    pido_91825 = plugin.plugin_output(root, report_host, '91825')
-    if "No output recorded." in pido_91825 \
-            or "Check Audit Trail" in pido_91825 \
-            or "91825 not enabled." in pido_91825:
-        credentialed = 'no'
-    elif re.findall('Credentialed checks have been enabled for Oracle RDBMS server', pido_91825):
+    pido_91825 = plugin.plugin_output(root, report_host, "91825")
+    if (
+        "No output recorded." in pido_91825
+        or "Check Audit Trail" in pido_91825
+        or "91825 not enabled." in pido_91825
+    ):
+        credentialed = "no"
+    elif re.findall(
+        "Credentialed checks have been enabled for Oracle RDBMS server", pido_91825
+    ):
         credentialed = "yes, based on plugin id 91825"
 
     # "91827: Microsoft SQL Server Login Possible"
-    pido_91827 = plugin.plugin_output(root, report_host, '91827')
-    if "No output recorded." in pido_91827 \
-            or "Check Audit Trail" in pido_91827 \
-            or "91827 not enabled." in pido_91827:
-        credentialed = 'no'
-    elif re.findall('Credentialed checks have been enabled for MSSQL server', pido_91827):
+    pido_91827 = plugin.plugin_output(root, report_host, "91827")
+    if (
+        "No output recorded." in pido_91827
+        or "Check Audit Trail" in pido_91827
+        or "91827 not enabled." in pido_91827
+    ):
+        credentialed = "no"
+    elif re.findall(
+        "Credentialed checks have been enabled for MSSQL server", pido_91827
+    ):
         credentialed = "yes, based on plugin id 91827"
 
     return credentialed
@@ -238,7 +252,7 @@ def number_of_plugins_per_risk_factor(report_host, risk_factor_level):
     """
     risk_factor_counter = 0
     for report_item in report_host.findall("ReportItem"):
-        risk_factor = report_item.find('risk_factor')
+        risk_factor = report_item.find("risk_factor")
         if risk_factor is not None:
             if risk_factor.text == risk_factor_level:
                 risk_factor_counter += 1
@@ -253,9 +267,9 @@ def number_of_compliance_plugins(report_host):
     """
     compliance_plugin_counter = 0
     for report_item in report_host.findall("ReportItem"):
-        compliance = report_item.find('compliance')
+        compliance = report_item.find("compliance")
         if compliance is not None:
-            if compliance.text == 'true':
+            if compliance.text == "true":
                 compliance_plugin_counter += 1
     return compliance_plugin_counter
 
@@ -272,7 +286,9 @@ def number_of_compliance_plugins_per_result(report_host, compliance_result):
     """
     compliance_counter = 0
     for report_item in report_host.findall("ReportItem"):
-        compliance = report_item.find('cm:compliance-result', namespaces={'cm': 'http://www.nessus.org/cm'})
+        compliance = report_item.find(
+            "cm:compliance-result", namespaces={"cm": "http://www.nessus.org/cm"}
+        )
         if compliance is not None:
             if compliance.text == compliance_result:
                 compliance_counter += 1
@@ -295,9 +311,11 @@ def host_time_start(report_host):
     :param report_host: report host element
     :return: formatted date and time when scan has been started
     """
-    host_start_time = host_property_value(report_host, 'HOST_START')
+    host_start_time = host_property_value(report_host, "HOST_START")
     if host_start_time is not None:
-        host_start_time_formatted = datetime.datetime.strptime(host_start_time, "%a %b %d %H:%M:%S %Y")
+        host_start_time_formatted = datetime.datetime.strptime(
+            host_start_time, "%a %b %d %H:%M:%S %Y"
+        )
     else:
         host_start_time_formatted = None
     return host_start_time_formatted
@@ -309,9 +327,11 @@ def host_time_end(report_host):
     :param report_host: report host element
     :return: formatted date and time when scan has been ended
     """
-    host_end_time = host_property_value(report_host, 'HOST_END')
+    host_end_time = host_property_value(report_host, "HOST_END")
     if host_end_time is not None:
-        host_end_time_formatted = datetime.datetime.strptime(host_end_time, "%a %b %d %H:%M:%S %Y")
+        host_end_time_formatted = datetime.datetime.strptime(
+            host_end_time, "%a %b %d %H:%M:%S %Y"
+        )
     else:
         host_end_time_formatted = None
 

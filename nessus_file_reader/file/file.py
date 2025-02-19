@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
@@ -50,12 +50,12 @@ def nessus_scan_file_size_human(file):
     :return: size in human readable form
     """
     size = nessus_scan_file_size(file)
-    suffix = 'B'
-    for unit in [' b', ' Ki', ' Mi', ' Gi', ' Ti', ' Pi', ' Ei', ' Zi']:
+    suffix = "B"
+    for unit in [" b", " Ki", " Mi", " Gi", " Ti", " Pi", " Ei", " Zi"]:
         if abs(size) < 1024.0:
             return "%3.1f%s%s" % (size, unit, suffix)
         size /= 1024.0
-    return "%.1f%s%s" % (size, 'Yi', suffix)
+    return "%.1f%s%s" % (size, "Yi", suffix)
 
 
 def nessus_scan_file_root_element(file):

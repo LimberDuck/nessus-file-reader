@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
@@ -20,21 +20,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 __all__ = [
-    "__title__", "__icon__", "__summary__", "__uri__", "__version__", "__release_date__", "__author__",
-    "__email__", "__license_name__", "__license_link__", "__copyright__"
+    "__title__",
+    "__icon__",
+    "__summary__",
+    "__uri__",
+    "__version__",
+    "__release_date__",
+    "__author__",
+    "__email__",
+    "__license_name__",
+    "__license_link__",
+    "__copyright__",
 ]
 
 __title__ = "nessus file reader by LimberDuck"
 __package_name__ = "nessus-file-reader"
 __icon__ = "LimberDuck-nessus-file-reader.ico"
-__summary__ = "nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module" \
-              "created to quickly parse nessus files containing the results of scans" \
-              "performed by using Nessus by (C) Tenable, Inc."
+__summary__ = (
+    "nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module"
+    "created to quickly parse nessus files containing the results of scans"
+    "performed by using Nessus by (C) Tenable, Inc."
+)
 __uri__ = "https://github.com/LimberDuck"
 __version__ = "0.4.2"
 __release_date__ = "2023.03.04"
-__author__ = u"Damian Krawczyk"
+__author__ = "Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"
 __license_link__ = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-__copyright__ = u"\N{COPYRIGHT SIGN} 2019-2023 by %s" % __author__
+__copyright__ = "\N{COPYRIGHT SIGN} 2019-2023 by %s" % __author__
