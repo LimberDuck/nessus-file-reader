@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
@@ -45,24 +45,26 @@ def plugin_output(root, report_host, plugin_id):
     status = 0
 
     for report_item in report_host.findall("ReportItem"):
-        plugin_id_from_report = report_item.get('pluginID')
+        plugin_id_from_report = report_item.get("pluginID")
         if plugin_id_from_report == plugin_id:
-            plugin_output_item = report_item.find('plugin_output')
+            plugin_output_item = report_item.find("plugin_output")
             if plugin_output_item is None:
-                plugin_output_content = f'{plugin_id} - no output recorded'
+                plugin_output_content = f"{plugin_id} - no output recorded"
             else:
                 plugin_output_content = plugin_output_item.text
             status = 1
     if status == 0:
-        plugin_output_content = f'{plugin_id} - check Audit Trail'
+        plugin_output_content = f"{plugin_id} - check Audit Trail"
 
-    if 'check Audit Trail' in plugin_output_content:
+    if "check Audit Trail" in plugin_output_content:
 
         if plugin_set is not None:
             if plugin_id not in scan.plugin_set(root):
-                plugin_output_content = f'{plugin_id} - not enabled'
+                plugin_output_content = f"{plugin_id} - not enabled"
         else:
-            plugin_output_content = f'{plugin_id} - info about used plugins not available'
+            plugin_output_content = (
+                f"{plugin_id} - info about used plugins not available"
+            )
     return plugin_output_content
 
 
@@ -87,29 +89,31 @@ def plugin_outputs(root, report_host, plugin_id):
     status = 0
 
     for report_item in report_host.findall("ReportItem"):
-        plugin_id_from_report = report_item.get('pluginID')
+        plugin_id_from_report = report_item.get("pluginID")
         if plugin_id_from_report == plugin_id:
-            plugin_output_item = report_item.find('plugin_output')
+            plugin_output_item = report_item.find("plugin_output")
             if plugin_output_item is None:
-                plugin_output_content.append(f'{plugin_id} - no output recorded')
+                plugin_output_content.append(f"{plugin_id} - no output recorded")
             else:
                 plugin_output_content.append(plugin_output_item.text)
             status = 1
     if status == 0:
-        plugin_output_content.append(f'{plugin_id} - check Audit Trail')
+        plugin_output_content.append(f"{plugin_id} - check Audit Trail")
 
-    if f'{plugin_id} - check Audit Trail' in plugin_output_content:
+    if f"{plugin_id} - check Audit Trail" in plugin_output_content:
 
         if plugin_set is not None:
             if plugin_id not in scan.plugin_set(root):
-                plugin_output_content = [f'{plugin_id} - not enabled']
+                plugin_output_content = [f"{plugin_id} - not enabled"]
         else:
-            plugin_output_content = [f'{plugin_id} - info about used plugins not available']
+            plugin_output_content = [
+                f"{plugin_id} - info about used plugins not available"
+            ]
 
     if len(plugin_output_content) == 1:
         plugin_output_content = plugin_output_content[0]
     else:
-        plugin_output_content = '\n'.join(plugin_output_content)
+        plugin_output_content = "\n".join(plugin_output_content)
 
     return plugin_output_content
 
@@ -122,10 +126,10 @@ def compliance_plugin(report_item):
         True if report item is compliance
         False if report item is not compliance
     """
-    compliance = report_item_value(report_item, 'compliance')
+    compliance = report_item_value(report_item, "compliance")
     plugin_type_compliance = False
     if compliance is not None:
-        if compliance == 'true':
+        if compliance == "true":
             plugin_type_compliance = True
     else:
         plugin_type_compliance = False
@@ -171,11 +175,13 @@ def compliance_check_item_value(report_item, compliance_check_item_name):
     :return: value of given compliance check item name
     """
     compliance_check_item_content_value = None
-    compliance = report_item.find('compliance')
+    compliance = report_item.find("compliance")
     if compliance is not None:
-        if compliance.text == 'true':
-            compliance_check_item_content = \
-                report_item.find(compliance_check_item_name, namespaces={'cm': 'http://www.nessus.org/cm'})
+        if compliance.text == "true":
+            compliance_check_item_content = report_item.find(
+                compliance_check_item_name,
+                namespaces={"cm": "http://www.nessus.org/cm"},
+            )
             if compliance_check_item_content is not None:
                 compliance_check_item_content_value = compliance_check_item_content.text
     return compliance_check_item_content_value
