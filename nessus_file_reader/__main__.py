@@ -53,7 +53,10 @@ def cli():
 @add_arguments(_file_arguments)
 @click.option("--size", is_flag=True, help="file size")
 @click.option("--structure", is_flag=True, help="file structure")
-def file(files, size, structure):
+@click.option(
+    "--split", type=int, help="file split into batches per number of ReportHost"
+)
+def file(files, size, structure, split):
     """Options related to nessus file."""
 
     for file in files:
@@ -96,6 +99,23 @@ def file(files, size, structure):
 
                     print(nessus_scan_file)
                     utilities.nessus_scan_file_structure(nessus_scan_file)
+            except FileNotFoundError as e:
+                print(e.strerror)
+        elif split:
+            try:
+                if os.path.isdir(file):
+                    os_separator = os.path.sep
+                    extension = "*.nessus"
+                    list_of_source_files = glob.glob(
+                        file + os_separator + "**" + os_separator + extension,
+                        recursive=True,
+                    )
+                else:
+                    list_of_source_files = [file]
+                for row_index, nessus_scan_file in enumerate(list_of_source_files):
+
+                    print(nessus_scan_file)
+                    utilities.nessus_scan_file_split(nessus_scan_file, split)
             except FileNotFoundError as e:
                 print(e.strerror)
         else:
