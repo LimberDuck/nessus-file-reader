@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Install Dependencies",
+        "type": "shell",
+        "command": "${config:virtualenvPath}/pip install -r requirements.txt"
+      },
+      {
+        "label": "Build Application",
+        "type": "shell",
+        "command": "${config:virtualenvPath}/python setup.py sdist bdist_wheel"
+      },
+      {
+        "label": "Start sphinx-autobuild",
+        "type": "shell",
+        "options": {
+            "env": {
+                "PROJECT_PORT": "8061"
+            }
+        },
+        "command": "source ${config:virtualenvPath}/activate; sphinx-autobuild ${workspaceFolder}/docs ${workspaceFolder}/docs/_build/html -a --port $PROJECT_PORT --open-browser"
+      }
+    ]
+  }

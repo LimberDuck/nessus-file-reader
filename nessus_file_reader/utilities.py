@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import re
 import ipaddress
 from xml.etree.ElementTree import parse
+import os
 
 
 def ip_range_split(ip_range):
@@ -379,3 +380,53 @@ def nessus_scan_file_structure(file):
                             )
                         else:
                             print(f"?5 {child_level_5.tag} [{child_level_4_len}]")
+
+
+def nessus_scan_file_split(input_file_path: str, batch_size: int) -> None:
+    """
+    Splits a .nessus XML file into multiple files, each containing a specified number of ReportHost entries.
+    Preserves the original XML formatting, including entities like &apos; and &quot;.
+
+    :param input_file_path: Path to the input .nessus file.
+    :param output_file_prefix: Prefix for the output files.
+    :param batch_size: Number of ReportHost entries per split file.
+    """
+    with open(input_file_path, "r", encoding="utf-8") as file:
+        xml_content = file.read()
+
+    # Extract the Policy section
+    policy_start = xml_content.find("<Policy>")
+    policy_end = xml_content.find("</Policy>") + len("</Policy>")
+    policy_element = xml_content[policy_start:policy_end]
+
+    # Extract the Report section
+    report_start = xml_content.find("<Report ")
+    report_end = xml_content.find("</Report>")
+    report_element = xml_content[report_start:report_end]
+    report_hosts = report_element.split("<ReportHost ")[1:]
+
+    # Extract the Report name
+    report_name_start = report_element.find('name="')
+    report_name_end = report_element.find('"', report_name_start + len('name="'))
+    report_name = report_element[report_name_start : report_name_end + 1]
+    report_name_line = f'<Report {report_name} xmlns:cm="http://www.nessus.org/cm">'
+
+    # Split ReportHost elements into batches
+    for i in range(0, len(report_hosts), batch_size):
+        batch = report_hosts[i : i + batch_size]
+
+        # Construct the new XML content
+        new_xml = xml_content[:report_start]
+        new_xml += report_name_line + "\n"
+        new_xml += "".join("<ReportHost " + host for host in batch)
+        new_xml += "</Report>\n</NessusClientData_v2>\n"
+
+        # Insert the Policy section
+        new_xml = new_xml[:policy_start] + policy_element + new_xml[policy_end:]
+
+        # Write the new XML content to a file
+        output_file_prefix = os.path.splitext(input_file_path)[0]
+        output_file = f"{output_file_prefix}_part{i // batch_size + 1}.nessus"
+        print(output_file)
+        with open(output_file, "w", encoding="utf-8") as out_file:
+            out_file.write(new_xml)

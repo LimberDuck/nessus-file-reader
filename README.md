@@ -1,26 +1,26 @@
 # nessus file reader
 
-**nessus file reader** by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
+**nessus file reader** (`nfr`) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
 and python module created to quickly parse nessus files containing the results 
-of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc. This module will let 
+of scans performed using Nessus and Tenable.sc by (C) Tenable, Inc. This module will let 
 you get data through functions grouped into categories like `file`, `scan`, `host` 
 and `plugin` to get specific information from the provided nessus scan files.
 
 [![Latest Release version](https://img.shields.io/github/v/release/LimberDuck/nessus-file-reader?label=Latest%20release)](https://github.com/LimberDuck/nessus-file-reader/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date/limberduck/nessus-file-reader?label=released&logo=GitHub)](https://github.com/LimberDuck/nessus-file-reader/releases)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/nessus-file-reader?logo=PyPI)](https://pypistats.org/packages/nessus-file-reader)
-
-[![License](https://img.shields.io/github/license/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader/blob/master/LICENSE)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/nessus-file-reader?logo=PyPI)](https://pypistats.org/packages/nessus-file-reader) [![License](https://img.shields.io/github/license/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader/blob/master/LICENSE)
 [![Repo size](https://img.shields.io/github/repo-size/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader)
 [![Code size](https://img.shields.io/github/languages/code-size/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader)
 [![Supported platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey.svg)](https://github.com/LimberDuck/nessus-file-reader)
+
+Visit [LimberDuck.org][LimberDuck] to find out more!
 
 ![](https://user-images.githubusercontent.com/9287709/222918443-5c88c441-e7b7-4298-93a2-a730fd8ff081.png)
 
 ## Main features
 
 * read data from nessus files containing results of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc.
-* use it in CLI to check quickly e.g. quality of your scan
+* use it in CLI to check quickly e.g. quality of your scan, split larg scan results
 * use it as python module
 
 > Check code [examples].
@@ -152,6 +152,25 @@ Report [1/2]
 ```
 
 Check whole example structure [examples/scan_avrx9t_structure.txt](examples/scan_avrx9t_structure.txt).
+
+##### File split
+
+Split the file with Nessus scan results into smaller files.
+
+```commandline
+nfr file --split 100 ./directory ./directory2
+nessus file reader by LimberDuck 0.5.0
+./directory/192_168_8_0_24_3mf2o4.nessus
+./directory/192_168_8_0_24_3mf2o4_part1.nessus
+./directory/192_168_8_0_24_3mf2o4_part2.nessus
+./directory/192_168_8_0_24_3mf2o4_part3.nessus
+./directory/subdirectory/My_Advanced_Scan_for_192_168_8_0_24_rg2ny9.nessus
+./directory/subdirectory/My_Advanced_Scan_for_192_168_8_0_24_rg2ny9_part1.nessus
+./directory2/192_168_8_0_24_3mf2o4.nessus
+./directory2/192_168_8_0_24_3mf2o4_part1.nessus
+./directory2/192_168_8_0_24_3mf2o4_part2.nessus
+./directory2/192_168_8_0_24_3mf2o4_part3.nessus
+```
 
 #### Scan command
 
