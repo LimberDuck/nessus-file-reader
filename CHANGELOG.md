@@ -38,6 +38,10 @@ New functions for plugins:
     - click>=8.2.1
     - jmespath>=1.0.1
 
+- tests for python
+  - added: 3.14
+  - removed: 3.8
+
 ## [0.5.0] - 2025-05-03
 
 ### Added
