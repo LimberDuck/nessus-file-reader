@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
+nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
 Copyright (C) 2019 Damian Krawczyk
@@ -203,3 +203,211 @@ def plugin_date(date):
     else:
         date_formatted = None
     return date_formatted
+
+
+def severity_number_to_label(severity_number):
+    """
+    Convert a numeric severity level to its corresponding string label.
+
+    Parameters:
+        severity_number: An integer representing the severity level as
+                         defined by Nessus in scan results. Expected values are:
+                         0 - Informational
+                         1 - Low
+                         2 - Medium
+                         3 - High
+                         4 - Critical
+
+    Returns:
+        A string representing the severity level. If the input is not recognized,
+        returns "Unknown".
+
+    Reference:
+        https://docs.tenable.com/quick-reference/nessus-file-format/Nessus-File-Format.pdf
+    """
+    severity_map = {0: "Info", 1: "Low", 2: "Medium", 3: "High", 4: "Critical"}
+    return severity_map.get(int(severity_number), "Unknown")
+
+
+def cvssv2_score_to_severity(cvss_score):
+    """
+    Convert a CVSS v2 base score to its corresponding severity label.
+
+    Parameters:
+        cvss_score: A numeric value representing the CVSS v2 base score.
+                    Expected range is 0.0 to 10.0.
+
+    Returns:
+        A string representing the severity level:
+            - 0.0       -> "None"
+            - 0.1-3.9   -> "Low"
+            - 4.0-6.9   -> "Medium"
+            - 7.0-9.9   -> "High"
+            - 10.0      -> "Critical"
+        If the input is None returns "", if out of range returns "Unknown".
+
+    References:
+        - https://docs.tenable.com/nessus/10_8/Content/RiskMetrics.htm
+        - https://docs.tenable.com/security-center/Content/RiskMetrics.htm
+    """
+    try:
+        score = float(cvss_score)
+    except (ValueError, TypeError):
+        return ""
+
+    if score == 0.0:
+        return "None"
+    elif 0.1 <= score <= 3.9:
+        return "Low"
+    elif 4.0 <= score <= 6.9:
+        return "Medium"
+    elif 7.0 <= score <= 9.9:
+        return "High"
+    elif score == 10.0:
+        return "Critical"
+    else:
+        return "Unknown"
+
+
+def cvssv3_score_to_severity(cvss_score):
+    """
+    Convert a CVSS v3 base score to its corresponding severity label.
+
+    Parameters:
+        cvss_score: A numeric value representing the CVSS v3 base score.
+                    Expected range is 0.0 to 10.0.
+
+    Returns:
+        A string representing the severity level:
+            - 0.0         -> "None"
+            - 0.1-3.9     -> "Low"
+            - 4.0-6.9     -> "Medium"
+            - 7.0-8.9     -> "High"
+            - 9.0-10.0    -> "Critical"
+        If the input is None returns "", if out of range returns "Unknown".
+
+    References:
+        - https://docs.tenable.com/nessus/10_8/Content/RiskMetrics.htm
+        - https://docs.tenable.com/security-center/Content/RiskMetrics.htm
+    """
+    try:
+        score = float(cvss_score)
+    except (ValueError, TypeError):
+        return ""
+
+    if score == 0.0:
+        return "None"
+    elif 0.1 <= score <= 3.9:
+        return "Low"
+    elif 4.0 <= score <= 6.9:
+        return "Medium"
+    elif 7.0 <= score <= 8.9:
+        return "High"
+    elif 9.0 <= score <= 10.0:
+        return "Critical"
+    else:
+        return "Unknown"
+
+
+def cvssv4_score_to_severity(cvss_score):
+    """
+    Convert a CVSS v4 base score to its corresponding severity label.
+
+    Parameters:
+        cvss_score: A numeric value representing the CVSS v4 base score.
+                    Expected range is 0.0 to 10.0.
+
+    Returns:
+        A string representing the severity level:
+            - 0.0         -> "None"
+            - 0.1-3.9     -> "Low"
+            - 4.0-6.9     -> "Medium"
+            - 7.0-8.9     -> "High"
+            - 9.0-10.0    -> "Critical"
+        If the input is None returns "", if out of range returns "Unknown".
+
+    Reference:
+        https://docs.tenable.com/nessus/10_8/Content/RiskMetrics.htm
+    """
+
+    try:
+        score = float(cvss_score)
+    except (ValueError, TypeError):
+        return ""
+
+    if score == 0.0:
+        return "None"
+    elif 0.1 <= score <= 3.9:
+        return "Low"
+    elif 4.0 <= score <= 6.9:
+        return "Medium"
+    elif 7.0 <= score <= 8.9:
+        return "High"
+    elif 9.0 <= score <= 10.0:
+        return "Critical"
+    else:
+        return "Unknown"
+
+
+def vpr_score_to_severity(vpr_score):
+    """
+    Convert a VPR (Vulnerability Priority Rating) score to its corresponding severity label.
+
+    Parameters:
+        cvss_score: A numeric value representing the VPR score,
+                    typically in the range of 0.0 to 10.0.
+
+    Returns:
+        A string representing the severity level:
+            - 0.0         -> "None"
+            - 0.1-3.9     -> "Low"
+            - 4.0-6.9     -> "Medium"
+            - 7.0-8.9     -> "High"
+            - 9.0-10.0    -> "Critical"
+        If the input is None returns "", if out of range returns "Unknown".
+
+    References:
+        - https://docs.tenable.com/nessus/10_8/Content/RiskMetrics.htm
+        - https://docs.tenable.com/security-center/Content/RiskMetrics.htm
+    """
+    try:
+        score = float(vpr_score)
+    except (ValueError, TypeError):
+        return ""
+
+    if score == 0.0:
+        return "None"
+    elif 0.1 <= score <= 3.9:
+        return "Low"
+    elif 4.0 <= score <= 6.9:
+        return "Medium"
+    elif 7.0 <= score <= 8.9:
+        return "High"
+    elif 9.0 <= score <= 10.0:
+        return "Critical"
+    else:
+        return "Unknown"
+
+
+def epss_score_decimal_to_percent(epss_score):
+    """
+    Convert an EPSS (Exploit Prediction Scoring System) score from decimal format to a percentage string.
+
+    Parameters:
+        epss_score: A numeric value representing the EPSS score in decimal format,
+                    typically between 0.0 and 1.0 (e.g., 0.153).
+
+    Returns:
+        A string representing the EPSS score as a percentage with one decimal place (e.g., "15.3%").
+        If the input is None returns "".
+
+    References:
+        - https://docs.tenable.com/nessus/10_8/Content/Severity.htm
+        - https://www.first.org/epss/articles/prob_percentile_bins
+    """
+    try:
+        score = float(epss_score)
+    except (ValueError, TypeError):
+        return ""
+
+    return f"{score * 100:.1f}%"

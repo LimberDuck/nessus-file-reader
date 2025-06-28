@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
+nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
 Copyright (C) 2019 Damian Krawczyk
@@ -33,19 +33,19 @@ __all__ = [
     "__copyright__",
 ]
 
-__title__ = "nessus file reader by LimberDuck"
+__title__ = "nessus file reader (NFR) by LimberDuck"
 __package_name__ = "nessus-file-reader"
 __icon__ = "LimberDuck-nessus-file-reader.ico"
 __summary__ = (
-    "nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module"
+    "nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module"
     "created to quickly parse nessus files containing the results of scans"
     "performed by using Nessus by (C) Tenable, Inc."
 )
 __uri__ = "https://github.com/LimberDuck"
-__version__ = "0.4.2"
-__release_date__ = "2023.03.04"
+__version__ = "0.6.0"
+__release_date__ = "2025.06.28"
 __author__ = "Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"
 __license_link__ = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-__copyright__ = "\N{COPYRIGHT SIGN} 2019-2023 by %s" % __author__
+__copyright__ = "\N{COPYRIGHT SIGN} 2019-2025 by %s" % __author__

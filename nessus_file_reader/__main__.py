@@ -5,6 +5,7 @@ from nessus_file_reader import utilities
 import os
 import glob
 import tabulate
+import jmespath
 
 
 def print_version(ctx, param, value):
@@ -126,13 +127,32 @@ def file(files, size, structure, split):
 @add_arguments(_file_arguments)
 @click.option("--scan-summary", is_flag=True, help="Scan summary")
 @click.option("--scan-summary-legend", is_flag=True, help="Show scan summary legend")
+@click.option("--plugin-severity", is_flag=True, help="Plugin severity")
+@click.option(
+    "--plugin-severity-legend", is_flag=True, help="Show plugin severity legend"
+)
 @click.option("--policy-summary", is_flag=True, help="Policy summary")
 @click.option(
     "--scan-file-source",
     is_flag=True,
     help="Source of scan file e.g. Nessus, Tenable.sc, Tenable.io",
 )
-def scan(files, scan_summary, scan_summary_legend, scan_file_source, policy_summary):
+@click.option(
+    "--filter",
+    "-f",
+    help="filter data with JMESPath. See https://jmespath.org/ for more information and examples. "
+    "Works with --plugin-severity only. ",
+)
+def scan(
+    files,
+    scan_summary,
+    scan_summary_legend,
+    plugin_severity,
+    plugin_severity_legend,
+    scan_file_source,
+    policy_summary,
+    filter,
+):
     """Options related to content of nessus file on scan level."""
 
     if files:
@@ -140,6 +160,7 @@ def scan(files, scan_summary, scan_summary_legend, scan_file_source, policy_summ
             summary_data = []
             scan_file_source_data = []
             policy_summary_data = []
+            plugin_severity_data = []
             for file in files:
                 if os.path.isdir(file):
                     os_separator = os.path.sep
@@ -244,9 +265,105 @@ def scan(files, scan_summary, scan_summary_legend, scan_file_source, policy_summ
                             }
                         )
 
+                    if plugin_severity:
+
+                        for report_host in nfr.scan.report_hosts(root):
+                            report_host_name = nfr.host.report_host_name(report_host)
+                            report_items_per_host = nfr.host.report_items(report_host)
+                            for report_item in report_items_per_host:
+                                plugin_id = nfr.plugin.report_item_value(
+                                    report_item, "pluginID"
+                                )
+                                severity = nfr.plugin.report_item_value(
+                                    report_item, "severity"
+                                )
+                                severity_label = nfr.plugin.severity_number_to_label(
+                                    severity
+                                )
+                                risk_factor = nfr.plugin.report_item_value(
+                                    report_item, "risk_factor"
+                                )
+                                cvssv2_base_score = nfr.plugin.report_item_value(
+                                    report_item, "cvss_base_score"
+                                )
+                                cvssv2_base_score_label = (
+                                    nfr.plugin.cvssv2_score_to_severity(
+                                        cvssv2_base_score
+                                    )
+                                )
+                                cvssv3_base_score = nfr.plugin.report_item_value(
+                                    report_item, "cvss3_base_score"
+                                )
+                                cvssv3_base_score_label = (
+                                    nfr.plugin.cvssv3_score_to_severity(
+                                        cvssv3_base_score
+                                    )
+                                )
+                                cvssv4_base_score = nfr.plugin.report_item_value(
+                                    report_item, "cvss4_base_score"
+                                )
+                                cvssv4_base_score_label = (
+                                    nfr.plugin.cvssv4_score_to_severity(
+                                        cvssv4_base_score
+                                    )
+                                )
+                                vpr_score = nfr.plugin.report_item_value(
+                                    report_item, "vpr_score"
+                                )
+                                vpr_score_label = nfr.plugin.vpr_score_to_severity(
+                                    vpr_score
+                                )
+                                epss_score = nfr.plugin.report_item_value(
+                                    report_item, "epss_score"
+                                )
+                                epss_score_label = (
+                                    nfr.plugin.epss_score_decimal_to_percent(epss_score)
+                                )
+
+                                plugin_severity_data.append(
+                                    {
+                                        "File name": nessus_scan_file,
+                                        "Report host name": report_host_name,
+                                        "PID": plugin_id,
+                                        "S": severity,
+                                        "SL": severity_label,
+                                        "RF": risk_factor,
+                                        "CVSSv2": cvssv2_base_score,
+                                        "CVSSv2L": cvssv2_base_score_label,
+                                        "CVSSv3": cvssv3_base_score,
+                                        "CVSSv3L": cvssv3_base_score_label,
+                                        "CVSSv4": cvssv4_base_score,
+                                        "CVSSv4L": cvssv4_base_score_label,
+                                        "VPR": vpr_score,
+                                        "VPRL": vpr_score_label,
+                                        "EPSS": epss_score,
+                                        "EPSS%": epss_score_label,
+                                    }
+                                )
+
             if scan_summary:
                 header = summary_data[0].keys()
                 rows = [x.values() for x in summary_data]
+                print(tabulate.tabulate(rows, header))
+
+            if plugin_severity:
+
+                default_filter = "@"
+
+                if filter:
+                    expression = jmespath.compile(filter)
+                else:
+                    expression = jmespath.compile(default_filter)
+
+                plugin_severity_data = expression.search(plugin_severity_data)
+
+                plugin_severity_data.sort(
+                    key=lambda x: (x["Report host name"], -int(x["S"]), int(x["PID"]))
+                )
+
+                header = plugin_severity_data[0].keys()
+                rows = [x.values() for x in plugin_severity_data]
+
                 print(tabulate.tabulate(rows, header))
 
             if scan_file_source:
@@ -277,9 +394,28 @@ def scan(files, scan_summary, scan_summary_legend, scan_file_source, policy_summ
         print("L - number of plugins with Low risk factor for whole scan")
         print("N - number of plugins with None risk factor for whole scan")
 
+    if plugin_severity_legend:
+        print("Legend for plugin severity:")
+        print("File name - nessus file name")
+        print("Report host name - target name used during scan")
+        print("PID - Plugin ID reported in scan")
+        print("S - Severity number (0-4) of plugin")
+        print("SL - Severity label of plugin (e.g. Critical, High, Medium, Low, None)")
+        print("RF - Risk factor of plugin (e.g. Critical, High, Medium, Low, None)")
+        print("CVSSv2 - CVSSv2 base score of plugin")
+        print("CVSSv2L - CVSSv2 base score label of plugin")
+        print("CVSSv3 - CVSSv3 base score of plugin")
+        print("CVSSv3L - CVSSv3 base score label of plugin")
+        print("CVSSv4 - CVSSv4 base score of plugin")
+        print("CVSSv4L - CVSSv4 base score label of plugin")
+        print("VPR - Vulnerability Priority Rating score of plugin")
+        print("VPRL - Vulnerability Priority Rating label of plugin")
+        print("EPSS - Exploit Prediction Scoring System score of plugin")
+        print("EPSS% - Exploit Prediction Scoring System score of plugin in percentage")
+
 
 def main():
-    name = "nessus file reader by LimberDuck"
+    name = "nessus file reader (NFR) by LimberDuck"
     print("{} {}".format(name, __version__))
     cli()
 

@@ -1,11 +1,45 @@
 # Change Log
 
-This document records all notable changes to [nessus file reader by LimberDuck][1].
+This document records all notable changes to [nessus file reader (NFR) by LimberDuck][1].
 
 Visit [LimberDuck.org][2] to find out more!
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.6.0] - 2025-06-28
+
+### Added
+
+#### CLI
+
+New options for `nfr scan` command:
+
+- `--plugin-severity` - to list for every detected plugin: Severity, Risk Factor, CVSSv2, CVSSv3, CVSSv4, VPR, EPSS.
+- `--plugin-severity-legend` - description for all columns returned by `--plugin-severity`.
+- `--filter` `-f` - possibility to filter data returned by `--plugin-severity` to specific values. Read about [JMESPath](https://jmespath.org).
+
+#### Module
+
+New functions for plugins:
+- `severity_number_to_label(severity_number)` - Convert a numeric severity level to its corresponding string label.
+- `cvssv2_score_to_severity(cvss_score)` - Convert a CVSS v2 base score to its corresponding severity label.
+- `cvssv3_score_to_severity(cvss_score)` - Convert a CVSS v3 base score to its corresponding severity label.
+- `cvssv4_score_to_severity(cvss_score)` - Convert a CVSS v4 base score to its corresponding severity label.
+- `vpr_score_to_severity(vpr_score)` - Convert a VPR (Vulnerability Priority Rating) score to its corresponding severity label.
+- `epss_score_decimal_to_percent(epss_score)` - Convert an EPSS (Exploit Prediction Scoring System) score from decimal format to a percentage string.
+
+### Changed
+
+- requirements update
+  - from:
+    - click>=8.1.8
+  - to:
+    - click>=8.2.1
+    - jmespath>=1.0.1
+
+- tests for python
+  - removed: 3.8, 3.9 due to [click 8.2.0 requirements](https://click.palletsprojects.com/en/stable/changes/#version-8-2-0).
 
 ## [0.5.0] - 2025-05-03
 
@@ -91,6 +125,7 @@ Plugins number used during the scan.
 
 - Initial release
 
+[0.6.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.3...v0.5.0
 [0.4.3]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.1...v0.4.2

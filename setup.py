@@ -16,7 +16,7 @@ setuptools.setup(
     license="GPLv3",
     author="Damian Krawczyk",
     author_email="damian.krawczyk@limberduck.org",
-    description="nessus file reader by LimberDuck is a CLI tool and python module "
+    description="nessus file reader (NFR) by LimberDuck is a CLI tool and python module "
     "created to quickly parse nessus files containing the results of scans "
     "performed by using Nessus by (C) Tenable, Inc.",
     long_description=long_description,
@@ -30,8 +30,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",

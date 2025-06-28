@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'nessus-file-reader'
-copyright = '2020, Damian Krawczyk'
+copyright = '2018-2025, Damian Krawczyk'
 author = 'Damian Krawczyk'
 
 # The full version, including alpha/beta/rc tags

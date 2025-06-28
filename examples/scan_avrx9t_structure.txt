@@ -1,4 +1,4 @@
-nessus file reader by LimberDuck 0.4.2
+nessus file reader (NFR) by LimberDuck 0.4.2
 test_files/scan_avrx9t.nessus
 Policy [2/2]
 ├── policyName [3/3]
