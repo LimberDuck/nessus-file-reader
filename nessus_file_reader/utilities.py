@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-nessus file reader by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
+nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
 Copyright (C) 2019 Damian Krawczyk

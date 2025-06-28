@@ -2,6 +2,16 @@
     "version": "2.0.0",
     "tasks": [
       {
+        "label": "Black Check",
+        "type": "shell",
+        "command": "${config:virtualenvPath}/black . --check"
+      },
+      {
+        "label": "Black Fix",
+        "type": "shell",
+        "command": "${config:virtualenvPath}/black ."
+      },
+      {
         "label": "Install Dependencies",
         "type": "shell",
         "command": "${config:virtualenvPath}/pip install -r requirements.txt"
