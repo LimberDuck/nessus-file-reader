@@ -40,7 +40,7 @@ New functions for plugins:
 
 - tests for python
   - added: 3.14
-  - removed: 3.8
+  - removed: 3.8, 3.9 due to [click 8.2.0 requirements](https://click.palletsprojects.com/en/stable/changes/#version-8-2-0).
 
 ## [0.5.0] - 2025-05-03
 
