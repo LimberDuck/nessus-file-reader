@@ -25,11 +25,16 @@
         "label": "Start sphinx-autobuild",
         "type": "shell",
         "options": {
-            "env": {
-                "PROJECT_PORT": "8061"
-            }
+          "env": {
+            "PROJECT_PORT": "8061"
+          }
         },
         "command": "source ${config:virtualenvPath}/activate; sphinx-autobuild ${workspaceFolder}/docs ${workspaceFolder}/docs/_build/html -a --port $PROJECT_PORT --open-browser"
-      }
+      },
+      {
+        "label": "Upgrade pip",
+        "type": "shell",
+        "command": "${config:virtualenvPath}/pip install --upgrade pip"
+      },
     ]
   }

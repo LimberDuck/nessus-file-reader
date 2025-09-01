@@ -1,7 +1,7 @@
 from nessus_file_reader._version import __version__
 import click
 import nessus_file_reader as nfr
-from nessus_file_reader import utilities
+from nessus_file_reader import utilities, __about__
 import os
 import glob
 import tabulate
@@ -42,12 +42,38 @@ def add_arguments(arguments):
     return _add_arguments
 
 
-@click.group()
-@click.option(
-    "--version", is_flag=True, callback=print_version, expose_value=False, is_eager=True
+PACKAGE_NAME = __about__.__package_name__
+
+
+@click.group(
+    invoke_without_command=True,
+    help="NFR - CLI tool and python module to pars nessus files",
+    epilog=f"Additional information:\n\n"
+    f"https://limberduck.org/en/latest/tools/{PACKAGE_NAME}\n"
+    f"https://github.com/LimberDuck/{PACKAGE_NAME}\n"
+    f"https://github.com/LimberDuck/{PACKAGE_NAME}/releases\n",
 )
-def cli():
-    pass
+@click.option(
+    "--version",
+    "-v",
+    is_flag=True,
+    callback=print_version,
+    expose_value=False,
+    is_eager=True,
+)
+@click.option(
+    "--update-check",
+    "-u",
+    is_flag=True,
+    help="Check if a new version is available and exit.",
+)
+@click.pass_context
+def cli(ctx, update_check):
+    if ctx.invoked_subcommand is None and not update_check:
+        click.echo(ctx.get_help())
+        ctx.exit(0)
+    if ctx.invoked_subcommand is None and update_check:
+        utilities.check_for_update()
 
 
 @cli.command()

@@ -7,6 +7,19 @@ Visit [LimberDuck.org][2] to find out more!
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2025-09-01
+
+### Added
+
+#### CLI
+
+- New option:
+  - `nfr --update-check` / `nfr -u` - will return confirmation if you are using the latest version of NFR.
+
+- Requirements update
+  - new:
+    - requests>=2.32.5
+
 ## [0.6.0] - 2025-06-28
 
 ### Added
@@ -125,6 +138,7 @@ Plugins number used during the scan.
 
 - Initial release
 
+[0.7.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.3...v0.5.0
 [0.4.3]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.4.2...v0.4.3
