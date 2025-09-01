@@ -6,12 +6,14 @@ of scans performed using Nessus and Tenable.sc by (C) Tenable, Inc. This module 
 you get data through functions grouped into categories like `file`, `scan`, `host` 
 and `plugin` to get specific information from the provided nessus scan files.
 
+[![pepy - Downloads](https://img.shields.io/pepy/dt/nessus-file-reader?logo=PyPI)](https://pepy.tech/projects/nessus-file-reader) [![PyPI Downloads](https://static.pepy.tech/badge/nessus-file-reader/month)](https://pepy.tech/projects/nessus-file-reader)
 [![Latest Release version](https://img.shields.io/github/v/release/LimberDuck/nessus-file-reader?label=Latest%20release)](https://github.com/LimberDuck/nessus-file-reader/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date/limberduck/nessus-file-reader?label=released&logo=GitHub)](https://github.com/LimberDuck/nessus-file-reader/releases)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/nessus-file-reader?logo=PyPI)](https://pypistats.org/packages/nessus-file-reader) [![License](https://img.shields.io/github/license/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader/blob/master/LICENSE)
 [![Repo size](https://img.shields.io/github/repo-size/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader)
 [![Code size](https://img.shields.io/github/languages/code-size/LimberDuck/nessus-file-reader.svg)](https://github.com/LimberDuck/nessus-file-reader)
 [![Supported platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey.svg)](https://github.com/LimberDuck/nessus-file-reader)
+<!-- [![PyPI - Downloads](https://img.shields.io/pypi/dm/nessus-file-reader?logo=PyPI)](https://pypistats.org/packages/nessus-file-reader) -->
 
 > [!NOTE]
 > **Visit [LimberDuck.org][LimberDuck] to find out more!**
