@@ -42,8 +42,8 @@ __summary__ = (
     "performed by using Nessus by (C) Tenable, Inc."
 )
 __uri__ = "https://github.com/LimberDuck"
-__version__ = "0.6.0"
-__release_date__ = "2025.06.28"
+__version__ = "0.7.0"
+__release_date__ = "2025.09.01"
 __author__ = "Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"
