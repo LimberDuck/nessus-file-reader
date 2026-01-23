@@ -1,0 +1,55 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  changelog:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload artifact with CHANGELOG
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-changelog
+          path: CHANGELOG.md
+
+  release:
+    needs: [changelog]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./downloaded-app-artifacts
+
+      - name: Check location
+        run: |
+          ls -la
+          ls -la ./downloaded-app-artifacts
+          ls -la ./downloaded-app-artifacts/ubuntu-latest-changelog
+
+      - name: Generate info
+        run: |
+            echo "## Summary" > info.md
+            awk '/^## /{if (p) exit; p=1; next} p' ./downloaded-app-artifacts/ubuntu-latest-changelog/CHANGELOG.md >> info.md
+
+      - name: Check location
+        run: |
+          ls -la
+          ls -la ./downloaded-app-artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: info.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
