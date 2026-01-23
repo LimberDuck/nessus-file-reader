@@ -442,7 +442,7 @@ def number_of_scanned_hosts_with_credentialed_checks_yes(root):
             or "not enabled." in pido_19506
             or "info about used plugins not available" in pido_19506
         ):
-            number_of_report_hosts_with_credentialed_checks = None
+            continue
         else:
             for line in pido_19506.split("\n"):
                 if re.findall("Credentialed checks :", line):

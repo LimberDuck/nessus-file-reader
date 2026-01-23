@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import datetime
+
 __all__ = [
     "__title__",
     "__icon__",
@@ -39,13 +41,15 @@ __icon__ = "LimberDuck-nessus-file-reader.ico"
 __summary__ = (
     "nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module"
     "created to quickly parse nessus files containing the results of scans"
-    "performed by using Nessus by (C) Tenable, Inc."
+    "performed by Tenable Nessus and Tenable Security Center."
 )
 __uri__ = "https://github.com/LimberDuck"
-__version__ = "0.7.1"
-__release_date__ = "2025.09.01"
+__version__ = "0.7.2"
+__release_date__ = "2026.01.23"
 __author__ = "Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"
 __license_link__ = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-__copyright__ = "\N{COPYRIGHT SIGN} 2019-2025 by %s" % __author__
+__copyright__ = "\N{COPYRIGHT SIGN} 2019-{} by {}".format(
+    datetime.datetime.now().year, __author__
+)
