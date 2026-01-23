@@ -1,11 +1,21 @@
-# Change Log
+# Changelog
 
 This document records all notable changes to [nessus file reader (NFR) by LimberDuck][1].
 
 Visit [LimberDuck.org][2] to find out more!
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.7.2] - 2026-01-23
+
+### Fixed
+
+- Fixed calculation in scan function `number_of_scanned_hosts_with_credentialed_checks_yes`:
+  - Previously:
+    - If there were no results for plugin 19506 for all scanned hosts, the returned value was `None`. This caused issues (`unsupported operand type(s) for +=: 'NoneType' and 'int'`) when results for plugin 19506 were missing for only some hosts.
+  - Now:
+    - If there are no results for plugin 19506 for all scanned hosts, the returned value will be `0`.
 
 ## [0.7.1] - 2025-09-01
 
@@ -146,6 +156,7 @@ Plugins number used during the scan.
 
 - Initial release
 
+[0.7.2]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.5.0...v0.6.0

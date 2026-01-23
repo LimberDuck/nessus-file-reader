@@ -2,7 +2,7 @@
 
 **nessus file reader (NFR) by LimberDuck** (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
 and python module created to quickly parse nessus files containing the results 
-of scans performed using Nessus and Tenable.sc by (C) Tenable, Inc. This module will let 
+of scans performed by Tenable Nessus and Tenable Security Center. This module will let 
 you get data through functions grouped into categories like `file`, `scan`, `host` 
 and `plugin` to get specific information from the provided nessus scan files.
 
@@ -22,7 +22,7 @@ and `plugin` to get specific information from the provided nessus scan files.
 
 ## Main features
 
-* read data from nessus files containing results of scans performed by using Nessus and Tenable.sc by (C) Tenable, Inc.
+* read data from nessus files containing results of scans performed by Tenable Nessus and Tenable Security Center
 * use it in CLI to check quickly e.g. quality of your scan, split large scan results
 * use it as python module
 

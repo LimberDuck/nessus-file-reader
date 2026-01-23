@@ -18,7 +18,7 @@ setuptools.setup(
     author_email="damian.krawczyk@limberduck.org",
     description="nessus file reader (NFR) by LimberDuck is a CLI tool and python module "
     "created to quickly parse nessus files containing the results of scans "
-    "performed by using Nessus by (C) Tenable, Inc.",
+    "performed by Tenable Nessus and Tenable Security Center.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/LimberDuck/nessus-file-reader",
