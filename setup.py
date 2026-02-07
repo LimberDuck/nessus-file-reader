@@ -26,6 +26,7 @@ setuptools.setup(
     install_requires=required,
     entry_points={"console_scripts": ["nfr = nessus_file_reader.__main__:main"]},
     classifiers=[
+        "Programming Language :: Python :: 3.14",
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.11",

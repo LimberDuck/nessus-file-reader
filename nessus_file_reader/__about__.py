@@ -44,8 +44,8 @@ __summary__ = (
     "performed by Tenable Nessus and Tenable Security Center."
 )
 __uri__ = "https://github.com/LimberDuck"
-__version__ = "0.7.2"
-__release_date__ = "2026.01.23"
+__version__ = "0.8.0"
+__release_date__ = "2026.02.07"
 __author__ = "Damian Krawczyk"
 __email__ = "damian.krawczyk@limberduck.org"
 __license_name__ = "GNU GPLv3"

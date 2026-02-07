@@ -6,7 +6,8 @@ import os
 import glob
 import tabulate
 import jmespath
-
+import plotext as plt
+from datetime import datetime
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing:
@@ -78,10 +79,10 @@ def cli(ctx, update_check):
 
 @cli.command()
 @add_arguments(_file_arguments)
-@click.option("--size", is_flag=True, help="file size")
-@click.option("--structure", is_flag=True, help="file structure")
+@click.option("--size", "-si", is_flag=True, help="file size")
+@click.option("--structure", "-st", is_flag=True, help="file structure")
 @click.option(
-    "--split", type=int, help="file split into batches per number of ReportHost"
+    "--split", "-sp", type=int, help="file split into batches per number of ReportHost"
 )
 def file(files, size, structure, split):
     """Options related to nessus file."""
@@ -151,23 +152,36 @@ def file(files, size, structure, split):
 
 @cli.command()
 @add_arguments(_file_arguments)
-@click.option("--scan-summary", is_flag=True, help="Scan summary")
-@click.option("--scan-summary-legend", is_flag=True, help="Show scan summary legend")
-@click.option("--plugin-severity", is_flag=True, help="Plugin severity")
-@click.option(
-    "--plugin-severity-legend", is_flag=True, help="Show plugin severity legend"
-)
-@click.option("--policy-summary", is_flag=True, help="Policy summary")
+@click.option("--scan-summary", "-scs",is_flag=True, help="Scan summary")
+@click.option("--scan-summary-legend", "-scsl", is_flag=True, help="Show scan summary legend")
 @click.option(
     "--scan-file-source",
+    "-scfs",
     is_flag=True,
     help="Source of scan file e.g. Nessus, Tenable.sc, Tenable.io",
 )
+@click.option("--plugin-severity", "-pls", is_flag=True, help="Plugin severity")
+@click.option(
+    "--plugin-severity-legend", "-plsl", is_flag=True, help="Show plugin severity legend"
+)
+@click.option(
+    "--plugin-publication-date",
+    "-plpd",
+    nargs=2,
+    type=click.Tuple([
+        click.Choice(["table", "bar", "line", "heatmap"], case_sensitive=False),
+        click.Choice(["day", "month", "year"], case_sensitive=False),
+    ]),
+    default=None,
+    help="Count plugins by publication date. Usage: --plugin-publication-date <format> <group> "
+    "where format is table|bar|line|heatmap and group is day|month|year (heatmap always shows months vs years)",
+)
+@click.option("--policy-summary", "-pos", is_flag=True, help="Policy summary")
 @click.option(
     "--filter",
     "-f",
-    help="filter data with JMESPath. See https://jmespath.org/ for more information and examples. "
-    "Works with --plugin-severity only. ",
+    help="Filter data with JMESPath. See https://jmespath.org/ for more information and examples. "
+    "Works with --plugin-severity and --plugin-publication-date. ",
 )
 def scan(
     files,
@@ -178,6 +192,7 @@ def scan(
     scan_file_source,
     policy_summary,
     filter,
+    plugin_publication_date,
 ):
     """Options related to content of nessus file on scan level."""
 
@@ -187,6 +202,7 @@ def scan(
             scan_file_source_data = []
             policy_summary_data = []
             plugin_severity_data = []
+            plugin_publication_date_data = []
             for file in files:
                 if os.path.isdir(file):
                     os_separator = os.path.sep
@@ -367,6 +383,36 @@ def scan(
                                     }
                                 )
 
+                    if plugin_publication_date:
+                        for report_host in nfr.scan.report_hosts(root):
+                            report_items_per_host = nfr.host.report_items(report_host)
+                            for report_item in report_items_per_host:
+                                pub_date = nfr.plugin.report_item_value(
+                                    report_item, "plugin_publication_date"
+                                )
+                                if pub_date:
+                                    risk_factor = nfr.plugin.report_item_value(
+                                        report_item, "risk_factor"
+                                    )
+                                    plugin_type = nfr.plugin.report_item_value(
+                                        report_item, "plugin_type"
+                                    )
+                                    severity = nfr.plugin.report_item_value(
+                                        report_item, "severity"
+                                    )
+                                    plugin_id = nfr.plugin.report_item_value(
+                                        report_item, "pluginID"
+                                    )
+                                    plugin_publication_date_data.append(
+                                        {
+                                            "plugin_publication_date": pub_date,
+                                            "risk_factor": risk_factor,
+                                            "severity": severity,
+                                            "plugin_id": plugin_id,
+                                            "plugin_type": plugin_type,
+                                        }
+                                    )
+
             if scan_summary:
                 header = summary_data[0].keys()
                 rows = [x.values() for x in summary_data]
@@ -401,6 +447,131 @@ def scan(
                 header = policy_summary_data[0].keys()
                 rows = [x.values() for x in policy_summary_data]
                 print(tabulate.tabulate(rows, header))
+
+            if plugin_publication_date:
+                # Extract format and group from tuple
+                pub_date_format, pub_date_group = plugin_publication_date
+
+                # Apply JMESPath filter if provided
+                default_filter = "@"
+                if filter:
+                    expression = jmespath.compile(filter)
+                else:
+                    expression = jmespath.compile(default_filter)
+
+                filtered_data = expression.search(plugin_publication_date_data)
+
+                # Helper function to group date by day, month, or year
+                def group_date(date_str, group_by):
+
+                    if "/" in date_str:
+                        date_obj = datetime.strptime(date_str, "%Y/%m/%d")
+                    else:
+                        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+
+                    if group_by == "year":
+                        return date_obj.strftime("%Y")
+                    elif group_by == "month":
+                        return date_obj.strftime("%Y-%m")
+                    else:  # day
+                        return date_obj.strftime("%Y-%m-%d")
+
+                # Aggregate by publication date (grouped)
+                date_counts = {}
+                for item in filtered_data:
+                    pub_date = item["plugin_publication_date"]
+                    grouped_date = group_date(pub_date, pub_date_group)
+                    if grouped_date in date_counts:
+                        date_counts[grouped_date] += 1
+                    else:
+                        date_counts[grouped_date] = 1
+
+                # Convert to sorted list for tabulate
+                publication_date_list = [
+                    {"plugin_publication_date": date, "number_of_plugins": count}
+                    for date, count in sorted(date_counts.items())
+                ]
+
+                if publication_date_list:
+                    if pub_date_format.lower() == "table":
+                        header = publication_date_list[0].keys()
+                        rows = [x.values() for x in publication_date_list]
+                        print(tabulate.tabulate(rows, header))
+                    else:
+
+                        plt.clear_figure()
+
+                        if pub_date_format.lower() == "bar":
+                            # Prepare data for plotting (dates already normalized by grouping)
+                            dates = [item["plugin_publication_date"] for item in publication_date_list]
+                            counts = [item["number_of_plugins"] for item in publication_date_list]
+                            group_label = pub_date_group.capitalize()
+
+                            # Simple bar plot with width limit to prevent terminal wrapping
+                            plt.simple_bar(dates, counts, width=60, color=(243, 121, 3))
+                            plt.title(f"Plugins by Publication {group_label}")
+
+                        elif pub_date_format.lower() == "line":
+                            # Prepare data for plotting (dates already normalized by grouping)
+                            dates = [item["plugin_publication_date"] for item in publication_date_list]
+                            counts = [item["number_of_plugins"] for item in publication_date_list]
+                            group_label = pub_date_group.capitalize()
+
+                            # Line plot - dark theme with white axes
+                            plt.theme("dark")
+
+                            # Set date format based on grouping
+                            if pub_date_group == "year":
+                                plt.date_form("Y")
+                            elif pub_date_group == "month":
+                                plt.date_form("Y-m")
+                            else:
+                                plt.date_form("Y-m-d")
+
+                            plt.plot(dates, counts, marker="braille", color=(243, 121, 3))
+                            plt.title(f"Plugins by Publication {group_label}")
+                            plt.xlabel(f"Publication {group_label}")
+                            plt.ylabel("Number of Plugins")
+
+                        elif pub_date_format.lower() == "heatmap":
+                            # Heatmap showing months (rows) vs years (columns)
+
+                            # Build month-year matrix from filtered data
+                            month_year_counts = {}
+                            for item in filtered_data:
+                                pub_date = item["plugin_publication_date"]
+                                if "/" in pub_date:
+                                    date_obj = datetime.strptime(pub_date, "%Y/%m/%d")
+                                else:
+                                    date_obj = datetime.strptime(pub_date, "%Y-%m-%d")
+                                year = date_obj.year
+                                month = date_obj.month
+                                key = (year, month)
+                                month_year_counts[key] = month_year_counts.get(key, 0) + 1
+
+                            if month_year_counts:
+                                # Get all years and create matrix
+                                years = sorted(set(k[0] for k in month_year_counts.keys()))
+                                months = list(range(1, 13))
+                                month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+                                # Create matrix: rows=months, cols=years
+                                matrix = []
+                                for month in months:
+                                    row = [month_year_counts.get((year, month), 0) for year in years]
+                                    matrix.append(row)
+
+                                plt.theme("dark")
+
+                                plt.matrix_plot(matrix)
+                                plt.title("Plugins by Publication Month/Year")
+                                plt.xlabel("Year")
+                                plt.ylabel("Month")
+                                plt.xticks(range(len(years)), [str(y) for y in years])
+                                plt.yticks(range(12), month_names)
+
+                        plt.show()
 
         except FileNotFoundError as e:
             print(e.strerror)
