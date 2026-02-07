@@ -7,6 +7,49 @@ Visit [LimberDuck.org][2] to find out more!
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-02-07
+
+### Added
+
+#### CLI
+
+NFR CLI got new `scan` option `--plugin-publication-date` / `-plpd`. Read more about plugin publication date feature in [NFR documentation](https://limberduck.org/en/latest/tools/nessus-file-reader/using.html#nfr-scan-plugin-publication-date).
+
+
+- Usage: `--plugin-publication-date <format> <group>` where
+  - `format` is one of: `table`, `bar`, `line`, `heatmap`
+  - `group` is one of: `day`, `month`, `year`
+
+- Use it with filter option `--filter` / `-f` to narrow down the results, e.g.:
+  - `-f "[?risk_factor != 'None']"` to include only plugins with risk factor other than None
+  - `-f "[?severity > '2']"` to include only plugins with severity higher then Medium (0 - Informational, 1 - Low, 2 - Medium, 3 - High, 4 - Critical)
+  - `-f "[?plugin_type == 'local']"` to include only local plugins
+  - `-f "[?plugin_id == '19506']"` to include only plugin with ID 19506
+
+- Requirements update
+  - new:
+    - plotext>=5.3.2
+
+
+- Other command options have been shortened with aliases:
+  - `file` command:
+    - `--size` -> `-si`
+    - `--structure` -> `-st`
+    - `--split` -> `-sp`
+  - `scan` command:
+    - `--scan-summary` -> `--scs`
+    - `--scan-summary-legend` -> `--scsl`
+    - `--scan-file-source` -> `--scfs`
+    - `--plugin-severity` -> `--pls`
+    - `--plugin-severity-legend` -> `--plsl`
+    - `--policy-summary` -> `--pos`
+
+### Changed
+
+- tests for python
+  - added: 3.14
+
+
 ## [0.7.2] - 2026-01-23
 
 ### Fixed
@@ -156,6 +199,7 @@ Plugins number used during the scan.
 
 - Initial release
 
+[0.8.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.6.0...v0.7.0
