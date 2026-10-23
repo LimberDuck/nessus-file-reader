@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
+LimberDuck NFR (nessus file reader) (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
 Copyright (C) 2019 Damian Krawczyk
@@ -50,6 +50,27 @@ def nessus_scan_file_size_human(file):
     :return: size in human readable form
     """
     size = nessus_scan_file_size(file)
+    return size_human(size)
+
+
+def nessus_scan_file_inside_zip_size_human(zip_file, file_inside_zip):
+    """
+    Function convert size of nessus file from inside of given zip file from
+    bytes to size more convenient to read by human.
+    :param zip_file: given zip file
+    :param file_inside_zip: name of nessus file inside of given zip file
+    :return: compressed and real size in human readable form
+    """
+    file_info = zip_file.getinfo(file_inside_zip)
+    return f"{size_human(file_info.compress_size)} [{size_human(file_info.file_size)}]"
+
+
+def size_human(size):
+    """
+    Function convert size from bytes to size more convenient to read by human.
+    :param size: size in bytes
+    :return: size in human readable form
+    """
     suffix = "B"
     for unit in [" b", " Ki", " Mi", " Gi", " Ti", " Pi", " Ei", " Zi"]:
         if abs(size) < 1024.0:

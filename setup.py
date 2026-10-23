@@ -16,7 +16,7 @@ setuptools.setup(
     license="GPLv3",
     author="Damian Krawczyk",
     author_email="damian.krawczyk@limberduck.org",
-    description="nessus file reader (NFR) by LimberDuck is a CLI tool and python module "
+    description="LimberDuck NFR (nessus file reader) is a CLI tool and python module "
     "created to quickly parse nessus files containing the results of scans "
     "performed by Tenable Nessus and Tenable Security Center.",
     long_description=long_description,
@@ -24,13 +24,14 @@ setuptools.setup(
     url="https://github.com/LimberDuck/nessus-file-reader",
     packages=setuptools.find_packages(),
     install_requires=required,
+    extras_require={"xlsx": ["XlsxWriter>=3.2.5"]},
     entry_points={"console_scripts": ["nfr = nessus_file_reader.__main__:main"]},
     classifiers=[
+        "Programming Language :: Python :: 3.15",
         "Programming Language :: Python :: 3.14",
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",

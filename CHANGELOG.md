@@ -1,11 +1,59 @@
 # Changelog
 
-This document records all notable changes to [nessus file reader (NFR) by LimberDuck][1].
+This document records all notable changes to [LimberDuck NFR (nessus file reader)][1].
 
 Visit [LimberDuck.org][2] to find out more!
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.9.0] - 2026-10-23
+
+### Added
+
+#### CLI
+
+NFR CLI got new `report` command to generate xlsx report with `scans`, `hosts`, `vulnerabilities` and `noncompliance` worksheets, the same as [LimberDuck NFA (nessus file analyzer)](https://github.com/LimberDuck/nessus-file-analyzer) does, without GUI, e.g. in CI/CD pipeline.
+
+- Usage: `nfr report [FILES/DIRECTORIES] --output-dir/-o <directory>`
+  - `--scans`/`-rs`, `--hosts`/`-rh`, `--vulnerabilities`/`-rv`, `--noncompliance`/`-rn` to select reports, all by default
+  - `--debug-data`/`-dd <report>|all` to add debug columns
+  - `--none-filter-out`, `--none-skip` for risk factor None in vulnerabilities report
+  - `--prefix`, `--suffix`, `--timestamp/--no-timestamp` for report file name
+  - `--quiet`/`-q` to print only path to report
+  - *.zip files with *.nessus files inside are supported
+  - exit code `1` if any nessus file could not be parsed, `2` if no nessus files were found
+
+#### Module
+
+- new `report` module with `generate_xlsx_report()` function
+- new `file` functions: `nessus_scan_file_inside_zip_size_human()`, `size_human()`
+
+- Requirements update
+  - new optional extra `xlsx`: `pip install nessus-file-reader[xlsx]`
+    - XlsxWriter>=3.2.5
+
+### Changed
+
+- requirements update
+  - from:
+    - click>=8.2.1
+    - tabulate>=0.9.0
+    - jmespath>=1.0.1
+    - requests>=2.32.5
+    - packaging>=25.0
+    - plotext>=5.3.2
+  - to:
+    - click>=8.5.0
+    - tabulate>=0.10.0
+    - jmespath>=1.1.0
+    - requests>=2.34.2
+    - packaging>=26.3
+    - plotext>=6.1.0
+
+- tests for python
+  - added: 3.15
+  - removed: 3.10
 
 ## [0.8.0] - 2026-02-07
 
@@ -199,6 +247,7 @@ Plugins number used during the scan.
 
 - Initial release
 
+[0.9.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/LimberDuck/nessus-file-reader/compare/v0.7.0...v0.7.1
