@@ -29,6 +29,7 @@ __all__ = [
 from .file import file
 from .host import host
 from .plugin import plugin
+from .report import report
 from .scan import scan
 
 name = "nessus_file_reader"

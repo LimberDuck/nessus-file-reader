@@ -3,11 +3,13 @@ import click
 import nessus_file_reader as nfr
 from nessus_file_reader import utilities, __about__
 import os
+import sys
 import glob
 import tabulate
 import jmespath
 import plotext as plt
 from datetime import datetime
+
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing:
@@ -152,8 +154,10 @@ def file(files, size, structure, split):
 
 @cli.command()
 @add_arguments(_file_arguments)
-@click.option("--scan-summary", "-scs",is_flag=True, help="Scan summary")
-@click.option("--scan-summary-legend", "-scsl", is_flag=True, help="Show scan summary legend")
+@click.option("--scan-summary", "-scs", is_flag=True, help="Scan summary")
+@click.option(
+    "--scan-summary-legend", "-scsl", is_flag=True, help="Show scan summary legend"
+)
 @click.option(
     "--scan-file-source",
     "-scfs",
@@ -162,16 +166,21 @@ def file(files, size, structure, split):
 )
 @click.option("--plugin-severity", "-pls", is_flag=True, help="Plugin severity")
 @click.option(
-    "--plugin-severity-legend", "-plsl", is_flag=True, help="Show plugin severity legend"
+    "--plugin-severity-legend",
+    "-plsl",
+    is_flag=True,
+    help="Show plugin severity legend",
 )
 @click.option(
     "--plugin-publication-date",
     "-plpd",
     nargs=2,
-    type=click.Tuple([
-        click.Choice(["table", "bar", "line", "heatmap"], case_sensitive=False),
-        click.Choice(["day", "month", "year"], case_sensitive=False),
-    ]),
+    type=click.Tuple(
+        [
+            click.Choice(["table", "bar", "line", "heatmap"], case_sensitive=False),
+            click.Choice(["day", "month", "year"], case_sensitive=False),
+        ]
+    ),
     default=None,
     help="Count plugins by publication date. Usage: --plugin-publication-date <format> <group> "
     "where format is table|bar|line|heatmap and group is day|month|year (heatmap always shows months vs years)",
@@ -503,8 +512,14 @@ def scan(
 
                         if pub_date_format.lower() == "bar":
                             # Prepare data for plotting (dates already normalized by grouping)
-                            dates = [item["plugin_publication_date"] for item in publication_date_list]
-                            counts = [item["number_of_plugins"] for item in publication_date_list]
+                            dates = [
+                                item["plugin_publication_date"]
+                                for item in publication_date_list
+                            ]
+                            counts = [
+                                item["number_of_plugins"]
+                                for item in publication_date_list
+                            ]
                             group_label = pub_date_group.capitalize()
 
                             # Simple bar plot with width limit to prevent terminal wrapping
@@ -513,8 +528,14 @@ def scan(
 
                         elif pub_date_format.lower() == "line":
                             # Prepare data for plotting (dates already normalized by grouping)
-                            dates = [item["plugin_publication_date"] for item in publication_date_list]
-                            counts = [item["number_of_plugins"] for item in publication_date_list]
+                            dates = [
+                                item["plugin_publication_date"]
+                                for item in publication_date_list
+                            ]
+                            counts = [
+                                item["number_of_plugins"]
+                                for item in publication_date_list
+                            ]
                             group_label = pub_date_group.capitalize()
 
                             # Line plot - dark theme with white axes
@@ -528,7 +549,9 @@ def scan(
                             else:
                                 plt.date_form("Y-m-d")
 
-                            plt.plot(dates, counts, marker="braille", color=(243, 121, 3))
+                            plt.plot(
+                                dates, counts, marker="braille", color=(243, 121, 3)
+                            )
                             plt.title(f"Plugins by Publication {group_label}")
                             plt.xlabel(f"Publication {group_label}")
                             plt.ylabel("Number of Plugins")
@@ -547,19 +570,38 @@ def scan(
                                 year = date_obj.year
                                 month = date_obj.month
                                 key = (year, month)
-                                month_year_counts[key] = month_year_counts.get(key, 0) + 1
+                                month_year_counts[key] = (
+                                    month_year_counts.get(key, 0) + 1
+                                )
 
                             if month_year_counts:
                                 # Get all years and create matrix
-                                years = sorted(set(k[0] for k in month_year_counts.keys()))
+                                years = sorted(
+                                    set(k[0] for k in month_year_counts.keys())
+                                )
                                 months = list(range(1, 13))
-                                month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                                month_names = [
+                                    "Jan",
+                                    "Feb",
+                                    "Mar",
+                                    "Apr",
+                                    "May",
+                                    "Jun",
+                                    "Jul",
+                                    "Aug",
+                                    "Sep",
+                                    "Oct",
+                                    "Nov",
+                                    "Dec",
+                                ]
 
                                 # Create matrix: rows=months, cols=years
                                 matrix = []
                                 for month in months:
-                                    row = [month_year_counts.get((year, month), 0) for year in years]
+                                    row = [
+                                        month_year_counts.get((year, month), 0)
+                                        for year in years
+                                    ]
                                     matrix.append(row)
 
                                 plt.theme("dark")
@@ -611,8 +653,150 @@ def scan(
         print("EPSS% - Exploit Prediction Scoring System score of plugin in percentage")
 
 
+def list_of_report_source_files(files):
+    """
+    Function returns list of *.nessus and *.zip files from given files and directories.
+    Directories are searched recursively.
+    :param files: given files and directories
+    :return: list of source files
+    """
+    list_of_source_files = []
+    for file in files:
+        if os.path.isdir(file):
+            os_separator = os.path.sep
+            for extension in ["*.nessus", "*.zip"]:
+                list_of_source_files.extend(
+                    glob.glob(
+                        file + os_separator + "**" + os_separator + extension,
+                        recursive=True,
+                    )
+                )
+        elif os.path.isfile(file):
+            list_of_source_files.append(file)
+        else:
+            click.echo(f"No such file or directory: {file}", err=True)
+    return list_of_source_files
+
+
+@cli.command()
+@add_arguments(_file_arguments)
+@click.option(
+    "--output-dir",
+    "-o",
+    type=click.Path(file_okay=False),
+    default=".",
+    show_default=True,
+    help="Directory where xlsx report will be saved, created if missing",
+)
+@click.option("--scans", "-rs", is_flag=True, help="Report: scans")
+@click.option("--hosts", "-rh", is_flag=True, help="Report: hosts")
+@click.option("--vulnerabilities", "-rv", is_flag=True, help="Report: vulnerabilities")
+@click.option("--noncompliance", "-rn", is_flag=True, help="Report: noncompliance")
+@click.option(
+    "--debug-data",
+    "-dd",
+    multiple=True,
+    type=click.Choice(list(nfr.report.REPORT_TYPES) + ["all"], case_sensitive=False),
+    help="Add debug columns to given report, can be used multiple times",
+)
+@click.option(
+    "--none-filter-out",
+    is_flag=True,
+    help="Vulnerabilities report: filter out risk factor None with Excel filter",
+)
+@click.option(
+    "--none-skip",
+    is_flag=True,
+    help="Vulnerabilities report: skip risk factor None",
+)
+@click.option(
+    "--prefix",
+    default="security_report",
+    show_default=True,
+    help="Report file name prefix",
+)
+@click.option("--suffix", help="Report file name custom suffix")
+@click.option(
+    "--timestamp/--no-timestamp",
+    default=True,
+    show_default=True,
+    help="Add timestamp suffix to report file name",
+)
+@click.option("--quiet", "-q", is_flag=True, help="Print only path to report")
+def report(
+    files,
+    output_dir,
+    scans,
+    hosts,
+    vulnerabilities,
+    noncompliance,
+    debug_data,
+    none_filter_out,
+    none_skip,
+    prefix,
+    suffix,
+    timestamp,
+    quiet,
+):
+    """Generate xlsx report like LimberDuck NFA (nessus file analyzer) does.
+
+    FILES are *.nessus files, *.zip files with *.nessus files inside
+    or directories searched recursively for them. All reports are
+    generated if none is selected. Requires: pip install nessus-file-reader[xlsx]
+    """
+    if none_filter_out and none_skip:
+        raise click.UsageError(
+            "--none-filter-out and --none-skip are mutually exclusive"
+        )
+
+    list_of_source_files = list_of_report_source_files(files)
+    if not list_of_source_files:
+        raise click.UsageError("No *.nessus or *.zip files found")
+
+    selected_reports = [
+        report_type
+        for report_type, selected in zip(
+            nfr.report.REPORT_TYPES, [scans, hosts, vulnerabilities, noncompliance]
+        )
+        if selected
+    ] or list(nfr.report.REPORT_TYPES)
+
+    if "all" in debug_data:
+        debug_data = nfr.report.REPORT_TYPES
+
+    target_file_name = prefix
+    if suffix:
+        target_file_name += "_" + suffix
+    if timestamp:
+        target_file_name += "_" + datetime.now().strftime("%Y%m%d_%H%M%S")
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, target_file_name + ".xlsx")
+
+    try:
+        result = nfr.report.generate_xlsx_report(
+            list_of_source_files,
+            output_path,
+            reports=selected_reports,
+            debug_data=debug_data,
+            none_filter_out=none_filter_out,
+            none_skip=none_skip,
+            log=(lambda message: None) if quiet else click.echo,
+        )
+    except ImportError as e:
+        click.echo(e, err=True)
+        sys.exit(1)
+
+    click.echo(result["output_path"])
+    if result["files_with_errors"]:
+        click.echo(
+            f"{result['files_with_errors']}/{result['files_processed']} files with errors",
+            err=True,
+        )
+        sys.exit(1)
+
+
 def main():
-    name = "nessus file reader (NFR) by LimberDuck"
+    name = "LimberDuck NFR (nessus file reader)"
     print("{} {}".format(name, __version__))
     cli()
 

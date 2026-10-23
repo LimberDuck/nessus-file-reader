@@ -18,7 +18,7 @@ jobs:
       max-parallel: 1
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        python-version: ['3.11', '3.12', '3.13', '3.14', '3.15']
 
     steps:
       - uses: actions/checkout@v4
@@ -45,3 +45,9 @@ jobs:
       - name: pip show package
         run: |
           pip show ${{ env.python_package_name }}
+      - name: Install xlsx extra
+        run: |
+          pip install XlsxWriter
+      - name: Run tests
+        run: |
+          python -m unittest discover tests -v

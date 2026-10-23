@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a python module
+LimberDuck NFR (nessus file reader) (pronounced *ˈlɪm.bɚ dʌk*) is a python module
 created to quickly parse nessus files containing the results of scans
 performed by using Nessus by (C) Tenable, Inc.
 Copyright (C) 2019 Damian Krawczyk
@@ -35,11 +35,11 @@ __all__ = [
     "__copyright__",
 ]
 
-__title__ = "nessus file reader (NFR) by LimberDuck"
+__title__ = "LimberDuck NFR (nessus file reader)"
 __package_name__ = "nessus-file-reader"
 __icon__ = "LimberDuck-nessus-file-reader.ico"
 __summary__ = (
-    "nessus file reader (NFR) by LimberDuck (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module"
+    "LimberDuck NFR (nessus file reader) (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool and python module"
     "created to quickly parse nessus files containing the results of scans"
     "performed by Tenable Nessus and Tenable Security Center."
 )

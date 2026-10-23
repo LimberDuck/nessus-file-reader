@@ -1,6 +1,6 @@
-# nessus file reader (NFR)
+# LimberDuck NFR (nessus file reader)
 
-**nessus file reader (NFR) by LimberDuck** (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
+**LimberDuck NFR (nessus file reader)** (pronounced *ˈlɪm.bɚ dʌk*) is a CLI tool 
 and python module created to quickly parse nessus files containing the results 
 of scans performed by Tenable Nessus and Tenable Security Center. This module will let 
 you get data through functions grouped into categories like `file`, `scan`, `host` 
@@ -24,6 +24,7 @@ and `plugin` to get specific information from the provided nessus scan files.
 
 * read data from nessus files containing results of scans performed by Tenable Nessus and Tenable Security Center
 * use it in CLI to check quickly e.g. quality of your scan, split large scan results
+* use it in CLI to generate xlsx reports like [LimberDuck NFA (nessus file analyzer)](https://github.com/LimberDuck/nessus-file-analyzer) does, e.g. in CI/CD pipeline
 * use it as python module
 
 > [!TIP]
@@ -68,14 +69,14 @@ Run `nfr file --help` to see options related to nessus file.
 Check size of given file:
 ```commandline
 nfr file --size test_files/scan_avrx9t.nessus
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 test_files/scan_avrx9t.nessus 2.4 MiB
 ```
 
 more than one file:
 ```commandline
 nfr file --size test_files/scan_avrx9t.nessus test_files/scan_ihc1js.nessus
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 test_files/scan_avrx9t.nessus 2.4 MiB
 test_files/scan_ihc1js.nessus 5.0 MiB
 ```
@@ -83,7 +84,7 @@ test_files/scan_ihc1js.nessus 5.0 MiB
 all files in given directory and it's subdirectories:
 ```commandline
 nfr file --size test_files  
-nessus file reader (NFR) by LimberDuck 0.4.2                                                      
+LimberDuck NFR (nessus file reader) 0.4.2                                                      
 test_files/scan_avrx9t.nessus 2.4 MiB
 test_files/scan_ihc1js.nessus 5.0 MiB
 test_files/test_subdirectory/scan_ihc1js.nessus 878.3 KiB
@@ -95,7 +96,7 @@ Check structure of given file:
 
 ```commandline
 nfr file --structure test_files/scan_avrx9t.nessus
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 test_files/scan_avrx9t.nessus
 Policy [2/2]
 ├── policyName [3/3]
@@ -163,7 +164,7 @@ Split the file with Nessus scan results into smaller files.
 
 ```commandline
 nfr file --split 100 ./directory ./directory2
-nessus file reader (NFR) by LimberDuck 0.5.0
+LimberDuck NFR (nessus file reader) 0.5.0
 ./directory/192_168_8_0_24_3mf2o4.nessus
 ./directory/192_168_8_0_24_3mf2o4_part1.nessus
 ./directory/192_168_8_0_24_3mf2o4_part2.nessus
@@ -186,7 +187,7 @@ See scan summary of given file/-s or all files in given directory and it's subdi
 
 ```commandline
 nfr scan --scan-summary scan_avrx9t.nessus
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 File name           Report name     TH    SH    CC    C    H    M    L    N
 ------------------  ------------  ----  ----  ----  ---  ---  ---  ---  ---
 scan_avrx9t.nessus  test scan        1     1     1   48  182  126   15   38
@@ -194,7 +195,7 @@ scan_avrx9t.nessus  test scan        1     1     1   48  182  126   15   38
 
 ```commandline
 nfr scan --scan-summary-legend                              
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 Legend for scan summary:
 File name - nessus file name
 Report name - report name for given nessus file name
@@ -214,7 +215,7 @@ Compare severity scores assigned to plugin like Severity, Risk Factor, CVSSv2, C
 
 ```
 nfr scan --plugin-severity-legend                         
-nessus file reader (NFR) by LimberDuck 0.6.0
+LimberDuck NFR (nessus file reader) 0.6.0
 Legend for plugin severity:
 File name - nessus file name
 Report host name - target name used during scan
@@ -238,7 +239,7 @@ Just point the name or path to nessus file with scan results.
 
 ```
 nfr scan --plugin-severity 192_168_1_1_1022nb.nessus 
-nessus file reader (NFR) by LimberDuck 0.6.0
+LimberDuck NFR (nessus file reader) 0.6.0
 File name                  Report host name       PID    S  SL      RF        CVSSv2  CVSSv2L      CVSSv3  CVSSv3L    CVSSv4    CVSSv4L      VPR  VPRL      EPSS  EPSS%
 -------------------------  ------------------  ------  ---  ------  ------  --------  ---------  --------  ---------  --------  ---------  -----  ------  ------  -------
 192_168_1_1_1022nb.nessus  192.168.1.10         12217    2  Medium  Medium       5    Medium          5.3  Medium
@@ -257,7 +258,7 @@ Use `-f` or `--filter` to check only one Plugin ID among all scan results. Read 
 
 ```
 nfr scan --plugin-severity *.nessus -f "[?PID == '50686']"
-nessus file reader (NFR) by LimberDuck 0.6.0
+LimberDuck NFR (nessus file reader) 0.6.0
 File name                          Report host name      PID    S  SL      RF        CVSSv2  CVSSv2L      CVSSv3  CVSSv3L    CVSSv4    CVSSv4L      VPR  VPRL      EPSS  EPSS%
 ---------------------------------  ------------------  -----  ---  ------  ------  --------  ---------  --------  ---------  --------  ---------  -----  ------  ------  -------
 192_168_1_1_1022nb-1.nessus          192.168.1.10        50686    2  Medium  Medium       5.8  Medium          6.5  Medium                            4.9  Medium  0.0596  6.0%
@@ -268,7 +269,7 @@ Use `-f` or `--filter` to check only these plugins which have VPR assigned. Read
 
 ```
 nfr scan --plugin-severity 192_168_1_1_1022nb.nessus -f "[?VPR != null]"   
-nessus file reader (NFR) by LimberDuck 0.6.0
+LimberDuck NFR (nessus file reader) 0.6.0
 File name                  Report host name      PID    S  SL      RF        CVSSv2  CVSSv2L      CVSSv3  CVSSv3L    CVSSv4    CVSSv4L      VPR  VPRL      EPSS  EPSS%
 -------------------------  ------------------  -----  ---  ------  ------  --------  ---------  --------  ---------  --------  ---------  -----  ------  ------  -------
 192_168_1_1_1022nb.nessus  192.168.1.10        50686    2  Medium  Medium       5.8  Medium          6.5  Medium                            4.9  Medium  0.0596  6.0%
@@ -280,7 +281,7 @@ Use `-f` or `--filter` to check only these plugins which have, e.g., CVSSv3 scor
 
 ```
 nfr scan --plugin-severity 192_168_1_1_1022nb.nessus -f "[?CVSSv3 > '4.0']"
-nessus file reader (NFR) by LimberDuck 0.6.0
+LimberDuck NFR (nessus file reader) 0.6.0
 File name                  Report host name      PID    S  SL      RF        CVSSv2  CVSSv2L      CVSSv3  CVSSv3L    CVSSv4    CVSSv4L      VPR  VPRL      EPSS  EPSS%
 -------------------------  ------------------  -----  ---  ------  ------  --------  ---------  --------  ---------  --------  ---------  -----  ------  ------  -------
 192_168_1_1_1022nb.nessus  192.168.1.10        12217    2  Medium  Medium       5    Medium          5.3  Medium
@@ -295,7 +296,7 @@ See policy scan summary of given file/-s or all files in given directory and it'
 
 ```commandline
 nfr scan --policy-summary scan_ihc1js.nessus scan_avrx9t.nessus
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 File name           Policy name      Max hosts    Max checks    Checks timeout    Plugins number
 ------------------  -------------  -----------  ------------  ----------------  ----------------
 scan_ihc1js.nessus  Advanced Scan          100             5                 5            103203
@@ -309,12 +310,34 @@ See scan file source like Nessus, Tenable.sc, Tenable.io of given file/-s or all
 
 ```commandline
 nfr scan --scan-file-source scan_ihc1js.nessus scan_avrx9t.nessus
-nessus file reader (NFR) by LimberDuck 0.4.2
+LimberDuck NFR (nessus file reader) 0.4.2
 File name           Source
 ------------------  ----------
 scan_ihc1js.nessus  Tenable.sc
 scan_avrx9t.nessus  Nessus
 ```
+
+#### Report command
+
+Run `nfr report --help` to see options related to xlsx reports.
+
+Generate xlsx report with the same `scans`, `hosts`, `vulnerabilities` and `noncompliance` worksheets as [LimberDuck NFA (nessus file analyzer)](https://github.com/LimberDuck/nessus-file-analyzer) does, without GUI, e.g. in CI/CD pipeline. It requires additional dependency:
+
+`pip install nessus-file-reader[xlsx]`
+
+Generate all reports for given nessus files, zip files with nessus files inside or all of them in given directory and it's subdirectories:
+
+```commandline
+nfr report ./scans -o ./reports
+```
+
+Generate only vulnerabilities report with additional debug columns, skip vulnerabilities with risk factor None and save it under fixed file name `./reports/security_report_weekly.xlsx`:
+
+```commandline
+nfr report ./scans -o ./reports -rv -dd vulnerabilities --none-skip --suffix weekly --no-timestamp
+```
+
+Exit code is `1` if any nessus file could not be parsed, `2` if no nessus files were found.
 
 ### Use nfr as python module
 
@@ -432,9 +455,9 @@ GNU GPLv3: [LICENSE].
 
 ### Authors
 
-[Damian Krawczyk] created **[nessus file reader (NFR)]** by [LimberDuck].
+[Damian Krawczyk] created **[LimberDuck] [NFR (nessus file reader)]**.
 
-[nessus file reader (NFR)]: https://limberduck.org/en/latest/tools/nessus-file-reader
+[NFR (nessus file reader)]: https://limberduck.org/en/latest/tools/nessus-file-reader
 [Damian Krawczyk]: https://damiankrawczyk.com
 [LimberDuck]: https://limberduck.org
 [CHANGELOG]: https://github.com/LimberDuck/nessus-file-reader/blob/master/CHANGELOG.md
