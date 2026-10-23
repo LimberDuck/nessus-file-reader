@@ -35,12 +35,11 @@ jobs:
         run: |
           ls -la
           ls -la ./downloaded-app-artifacts
-          ls -la ./downloaded-app-artifacts/ubuntu-latest-changelog
 
       - name: Generate info
         run: |
             echo "## Summary" > info.md
-            awk '/^## /{if (p) exit; p=1; next} p' ./downloaded-app-artifacts/ubuntu-latest-changelog/CHANGELOG.md >> info.md
+            awk '/^## /{if (p) exit; p=1; next} p' ./downloaded-app-artifacts/CHANGELOG.md >> info.md
 
       - name: Check location
         run: |
