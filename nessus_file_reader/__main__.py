@@ -50,7 +50,7 @@ PACKAGE_NAME = __about__.__package_name__
 
 @click.group(
     invoke_without_command=True,
-    help="NFR - CLI tool and python module to pars nessus files",
+    help="NFR - CLI tool and python module to parse nessus files",
     epilog=f"Additional information:\n\n"
     f"https://limberduck.org/en/latest/tools/{PACKAGE_NAME}\n"
     f"https://github.com/LimberDuck/{PACKAGE_NAME}\n"
